@@ -1,18 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+      border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
-  
+  <div id="app">
+    <el-upload class="avatar-uploader" action="http://localhost:3000/upload" :show-file-list="false"
+      :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </el-upload>
+    <img v-for="url in image " :src="url.imagename" alt="">
+  </div>
 </body>
-<script src="./lib/axios.js"></script>
-<script>
-  axios.post('http://localhost:3000/signin', data.field)
-    .then(res => {
-      console.log(res)
-    })
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="/public/lib/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script type="text/javascript">
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      imageUrl: '',
+      image: ''
+    },
+    methods: {
+      handleAvatarSuccess(res, file) {
+        console.log(file)
+        this.imageUrl = URL.createObjectURL(file.raw);
+        axios.post('http://localhost:3000/download', {})
+          .then(res => {
+            this.image = res.data.responseObject
+          })
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      }
+    },
+    mounted () {
+      axios.post('http://localhost:3000/download', {})
+          .then(res => {
+            console.log(res)
+            this.image = res.data.responseObject
+          })
+    }
+  })
 </script>
+
 </html>
