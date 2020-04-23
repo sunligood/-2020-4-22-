@@ -50,7 +50,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           localStorage.setItem('ms_username', this.ruleForm.username);
-          this.$router.push('/dashboard');
+          this.$router.push('/allUser');
         } else {
           console.log('error submit!!');
           return false;

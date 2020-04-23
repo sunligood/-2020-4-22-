@@ -2,7 +2,8 @@
   <div class="sidebar">
     <el-menu
       class="sidebar-el-menu"
-      :default-active="onRoutes"
+      :default-active="defaultActive"
+      :default-openeds="defaultOpeneds"
       :collapse="collapse"
       background-color="#20222A"
       text-color="rgba(255,255,255,.7)"
@@ -49,10 +50,12 @@ export default {
     return {
       collapse: false,
       menuItems: [],
+      defaultActive: 'allUser',
+      defaultOpeneds: ['classAdmin'],
       items: [
         {
-          icon: 'el-icon-Lx-home',
-          index: 'dashboard',
+          icon: 'el-icon-lx-home',
+          index: 'classAdmin',
           title: '班级管理',
           subs: [
             {
@@ -60,7 +63,7 @@ export default {
               title: "所有用户"
             },
             {
-              index: 'addUser',
+              index: 'addUsers',
               title: '添加用户'
             },
             {
@@ -68,7 +71,7 @@ export default {
               title: '班级相册'
             },
             {
-              index: 'message',
+              index: 'messages',
               title: '消息管理'
             }
           ]
