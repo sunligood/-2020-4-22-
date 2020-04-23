@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <v-head></v-head>
     <div class="banner">
       <el-carousel :interval="5000" arrow="always">
         <el-carousel-item v-for="item in 4" :key="item">
@@ -23,7 +24,11 @@
 </template>
 
 <script>
+import vHead from "@/components/common/Header";
 export default {
+  components: {
+    vHead
+  },
   data() {
     return {
       bannerData: [],
@@ -70,6 +75,10 @@ export default {
 }
 
 /* main css */
+.banner {
+  width: 80%;
+  margin: 20px auto;
+}
 .news-box {
   position: relative;
   padding: 20px;
