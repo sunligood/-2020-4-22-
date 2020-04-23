@@ -156,10 +156,11 @@ export default {
   float: left;
   width: 250px;
   line-height: 70px;
+  font-size: 18px;
 }
 .header-nav {
   position: absolute;
-  right: 180px;
+  right: 110px;
   height: 70px;
   line-height: 70px;
   font-size: 15px;
@@ -177,7 +178,7 @@ export default {
 }
 .header-right {
   float: right;
-  padding-right: 50px;
+  padding-right: 20px;
 }
 .header-user-con {
   display: flex;

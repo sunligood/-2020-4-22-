@@ -23,7 +23,7 @@ export default new Router({
                 {
                     path: '/dashboard',
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),
-                    meta: { title: '系统首页' }
+                    meta: { title: '所有用户' }
                 },
                 {
                     path: '/icon',
