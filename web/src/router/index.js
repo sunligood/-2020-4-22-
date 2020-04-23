@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Home from '@/components/face/home/home'
 
 Vue.use(Router);
 
@@ -7,32 +8,37 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/dashboard'
+            redirect: '/home'
+        },
+        {
+            path: '/home',
+            component: Home,
+            meta: { title: '首页' }
         },
         {
             path: '/',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             meta: { title: '自述文件' },
-            children:[
+            children: [
                 {
-                    path: '/dashboard',
-                    component: resolve => require(['../components/page/Dashboard.vue'], resolve),
-                    meta: { title: '系统首页' }
+                    path: '/allUser',
+                    component: resolve => require(['../components/page/admin/allUser.vue'], resolve),
+                    meta: { title: '所有用户' }
                 },
                 {
-                    path: '/icon',
-                    component: resolve => require(['../components/page/Icon.vue'], resolve),
-                    meta: { title: '自定义图标' }
+                    path: '/addUsers',
+                    component: resolve => require(['../components/page/admin/addUsers.vue'], resolve),
+                    meta: { title: '添加用户' }
                 },
                 {
-                    path: '/table',
-                    component: resolve => require(['../components/page/BaseTable.vue'], resolve),
-                    meta: { title: '基础表格' }
+                    path: '/photos',
+                    component: resolve => require(['../components/page/admin/photos.vue'], resolve),
+                    meta: { title: '班级相册' }
                 },
                 {
-                    path: '/tabs',
-                    component: resolve => require(['../components/page/Tabs.vue'], resolve),
-                    meta: { title: 'tab选项卡' }
+                    path: '/messages',
+                    component: resolve => require(['../components/page/admin/messages.vue'], resolve),
+                    meta: { title: '消息管理' }
                 },
                 {
                     path: '/form',
@@ -76,13 +82,13 @@ export default new Router({
                     // markdown组件
                     path: '/markdown',
                     component: resolve => require(['../components/page/Markdown.vue'], resolve),
-                    meta: { title: 'markdown编辑器' }    
+                    meta: { title: 'markdown编辑器' }
                 },
                 {
                     // 图片上传组件
                     path: '/upload',
                     component: resolve => require(['../components/page/Upload.vue'], resolve),
-                    meta: { title: '文件上传' }   
+                    meta: { title: '文件上传' }
                 },
                 {
                     // vue-schart组件

@@ -1,30 +1,39 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
-      <i class="el-icon-menu"></i>
-    </div>
+    <div class="logoImg">LOGO</div>
     <div class="logo">XXXXX校友通讯录</div>
+    <div class="header-nav">
+      <ul>
+        <li>首页</li>
+        <li>班级相册</li>
+        <li>通讯录</li>
+        <li>关于学校</li>
+      </ul>
+    </div>
     <div class="header-right">
-      <div class="header-user-con">
+      <div class="header-user-con" :class="{fnHide: isLogin}">
+        <a href="javascript: void(0)" class="loginBtn" @click="toLogin()">登录</a>
+      </div>
+      <div class="header-user-con" :class="{fnHide: !isLogin}">
         <!-- 全屏显示 -->
-        <div class="btn-fullscreen" @click="handleFullScreen">
+        <!-- <div class="btn-fullscreen" @click="handleFullScreen">
           <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
             <i class="el-icon-rank"></i>
           </el-tooltip>
-        </div>
+        </div>-->
         <!-- 消息中心 -->
-        <div class="btn-bell">
+        <!-- <div class="btn-bell">
           <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
             <router-link to="/tabs">
               <i class="el-icon-bell"></i>
             </router-link>
           </el-tooltip>
           <span class="btn-bell-badge" v-if="message"></span>
-        </div>
+        </div>-->
         <!-- 用户头像 -->
         <div class="user-avator">
-          <img src="../../assets/img/img.jpg" />
+          <img src="../../../assets/img/img.jpg" />
         </div>
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -45,7 +54,7 @@
   </div>
 </template>
 <script>
-import bus from "../common/bus";
+import bus from "../../common/bus";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
 export default {
@@ -54,7 +63,8 @@ export default {
       collapse: false,
       fullscreen: false,
       name: "linxin",
-      message: 2
+      message: 2,
+      isLogin: false
     };
   },
   computed: {
@@ -114,6 +124,9 @@ export default {
     },
     showDailog1() {
       alert(12);
+    },
+    toLogin() {
+      this.$router.push({ path: '/login' })
     }
   },
   mounted() {
@@ -125,7 +138,7 @@ export default {
 </script>
 <style scoped>
 .header {
-  background-color: #23262e !important;
+  background-color: #0577c0 !important;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -133,7 +146,7 @@ export default {
   font-size: 22px;
   color: #fff;
 }
-.collapse-btn {
+.logoImg {
   float: left;
   padding: 0 21px;
   cursor: pointer;
@@ -143,10 +156,29 @@ export default {
   float: left;
   width: 250px;
   line-height: 70px;
+  font-size: 18px;
+}
+.header-nav {
+  position: absolute;
+  right: 110px;
+  height: 70px;
+  line-height: 70px;
+  font-size: 15px;
+}
+.header-nav ul {
+  list-style: none;
+}
+.header-nav ul li {
+  float: left;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.header-nav ul li:hover {
+  text-decoration: underline;
 }
 .header-right {
   float: right;
-  padding-right: 50px;
+  padding-right: 20px;
 }
 .header-user-con {
   display: flex;
@@ -201,5 +233,15 @@ export default {
 }
 .collapse-btn:hover {
   background-color: #009688 !important;
+}
+.loginBtn {
+  padding: 5px 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #0577c0;
+  font-size: 15px;
+}
+.fnHide {
+  display: none;
 }
 </style>

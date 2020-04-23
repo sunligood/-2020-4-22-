@@ -18,10 +18,10 @@
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="新密码" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" :label-width="formLabelWidth">
-            <el-input show-password v-model="form.name" autocomplete="off"></el-input>
+          <el-input show-password v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -45,16 +45,16 @@ export default {
       tagsList: [],
       collapse: false,
       form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formLabelWidth: '120px'
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px'
     };
   },
   computed: {
@@ -64,13 +64,13 @@ export default {
   },
   methods: {
     ...mapActions("dailog", ["hideDailog", "showDailog"]),
-    handleClose(){
-       this.$confirm('确认关闭？')
-          .then(_ => {
-            this.hideDailog();
-            //this.$store.dispatch('dailog/hideDailog')
-          }).bind(this)
-          .catch(_ => {});
+    handleClose() {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.hideDailog();
+          //this.$store.dispatch('dailog/hideDailog')
+        }).bind(this)
+        .catch(_ => { });
     }
   },
   components: {
