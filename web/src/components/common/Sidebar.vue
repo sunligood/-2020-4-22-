@@ -43,7 +43,7 @@
 
 <script>
 import bus from "../common/bus";
-import {getSysmenu} from '../../api/api'
+import { getSysmenu } from '../../api/api'
 export default {
   data() {
     return {
@@ -168,18 +168,18 @@ export default {
     getMenuData(menuName) {
       let menuData = [];
       getSysmenu().then(
-        function(data) {
+        function (data) {
           let data1 = data.data.menuArr;
-          data1.forEach((val,index) => {
-            let i=8;
-            if(val.menuname==menuName){
+          data1.forEach((val, index) => {
+            let i = 8;
+            if (val.menuname == menuName) {
               let systemItem = {};
               systemItem.icon = "el-icon-setting";
-              systemItem.idex=i;
-              systemItem.title=val.menuname;
-              systemItem.subs=[];
+              systemItem.idex = i;
+              systemItem.title = val.menuname;
+              systemItem.subs = [];
               data1.forEach(value => {
-                if(value.parentid==val.id){
+                if (value.parentid == val.id) {
                   let systemSubs = {};
                   let menuurl = value.menuurl.split('/')[2];
                   systemSubs.index = menuurl;
