@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Home from '@/components/face/home/home'
 
 Vue.use(Router);
 
@@ -10,13 +11,18 @@ export default new Router({
             redirect: '/home'
         },
         {
+            path: '/home',
+            component: Home,
+            meta: { title: '首页' }
+        },
+        {
             path: '/',
             component: resolve => require(['../components/common/Home.vue'], resolve),
             meta: { title: '自述文件' },
             children: [
                 {
-                    path: '/home',
-                    component: resolve => require(['../components/home/home.vue'], resolve),
+                    path: '/dashboard',
+                    component: resolve => require(['../components/page/Dashboard.vue'], resolve),
                     meta: { title: '系统首页' }
                 },
                 {
