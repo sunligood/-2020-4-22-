@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">后台管理系统</div>
+      <div class="ms-title">XXXX校园通讯录</div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
         <el-form-item prop="username">
           <el-input v-model="ruleForm.username" placeholder="username">
@@ -50,7 +50,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           localStorage.setItem('ms_username', this.ruleForm.username);
-          this.$router.push('/allUser');
+          if (this.ruleForm.username != 'admin') this.$router.push('/userClass');
+          else this.$router.push('/allUser');
         } else {
           console.log('error submit!!');
           return false;

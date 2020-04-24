@@ -8,7 +8,6 @@
       background-color="#20222A"
       text-color="rgba(255,255,255,.7)"
       active-text-color="#fff"
-      unique-opened
       router
     >
       <template v-for="item in items">
@@ -50,9 +49,10 @@ export default {
     return {
       collapse: false,
       menuItems: [],
-      defaultActive: 'allUser',
-      defaultOpeneds: ['classAdmin'],
-      items: [
+      defaultActive: 'userClass',
+      defaultOpeneds: ['classAdmin', 'userClass', 'userInfo'],
+      items: [],
+      adminItems: [
         {
           icon: 'el-icon-lx-home',
           index: 'classAdmin',
@@ -75,124 +75,49 @@ export default {
               title: '消息管理'
             }
           ]
+        }],
+      userItems: [
+        {
+          icon: 'el-icon-lx-cascades',
+          index: 'userClass',
+          title: '班级',
+          subs: [
+            {
+              index: 'leavingMsg',
+              title: '班级留言'
+            },
+            {
+              index: 'classCommunication',
+              title: '班级通讯'
+            },
+            {
+              index: 'classPicture',
+              title: '班级相册'
+            }
+          ]
+        },
+        {
+          icon: 'el-icon-lx-copy',
+          index: 'userInfo',
+          title: '个人信息',
+          subs: [
+            {
+              index: 'changePwd',
+              title: '修改密码'
+            },
+            {
+              index: 'ownPeace',
+              title: '个人空间'
+            }
+          ]
         }
       ]
-      // items: [
-      //   {
-      //     icon: "el-icon-lx-home",
-      //     index: "dashboard",
-      //     title: "系统首页"
-      //   },
-      //   /* {
-      //     icon: "el-icon-lx-cascades",
-      //     index: "table",
-      //     title: "基础表格"
-      //   }, */
-      //   {
-      //     icon: "el-icon-lx-copy",
-      //     index: "tabs",
-      //     title: "tab选项卡"
-      //   },
-      //   {
-      //     icon: "el-icon-lx-calendar",
-      //     index: "3",
-      //     title: "表单相关",
-      //     subs: [
-      //       {
-      //         index: "form",
-      //         title: "基本表单"
-      //       },
-      //       {
-      //         index: "3-2",
-      //         title: "三级菜单",
-      //         subs: [
-      //           {
-      //             index: "editor",
-      //             title: "富文本编辑器"
-      //           },
-      //           {
-      //             index: "markdown",
-      //             title: "markdown编辑器"
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         index: "upload",
-      //         title: "文件上传"
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     icon: "el-icon-lx-calendar",
-      //     index: "4",
-      //     title: "树形插件",
-      //     subs: [
-      //       {
-      //         index: "tree1",
-      //         title: "基本树"
-      //       },
-      //       {
-      //         index: "tree2",
-      //         title: "可选择树"
-      //       },
-      //       {
-      //         index: "tree3",
-      //         title: "可编辑树"
-      //       },
-      //       {
-      //         index: "tree4",
-      //         title: "可查询树"
-      //       },
-      //       {
-      //         index: "tree5",
-      //         title: "节点选择"
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     icon: "el-icon-lx-emoji",
-      //     index: "icon",
-      //     title: "自定义图标"
-      //   },
-      //   {
-      //     icon: "el-icon-lx-favor",
-      //     index: "charts",
-      //     title: "schart图表"
-      //   },
-      //   {
-      //     icon: "el-icon-rank",
-      //     index: "6",
-      //     title: "拖拽组件",
-      //     subs: [
-      //       {
-      //         index: "drag",
-      //         title: "拖拽列表"
-      //       },
-      //       {
-      //         index: "dialog",
-      //         title: "拖拽弹框"
-      //       }
-      //     ]
-      //   },
-      //   {
-      //     icon: "el-icon-lx-warn",
-      //     index: "7",
-      //     title: "错误处理",
-      //     subs: [
-      //       {
-      //         index: "permission",
-      //         title: "权限测试"
-      //       },
-      //       {
-      //         index: "404",
-      //         title: "404页面"
-      //       }
-      //     ]
-      //   }
-      // ]
     };
   },
   methods: {
+    isAdmin(userName) {
+
+    },
     getMenuData(menuName) {
       let menuData = [];
       getSysmenu().then(
@@ -234,6 +159,21 @@ export default {
       this.collapse = msg;
     });
     // this.getMenuData("系统管理");
+
+    // 管理者与用户显示不痛菜单
+    var userName = localStorage.getItem('ms_username')
+    if (userName != 'admin') {
+      this.items = this.userItems
+      this.defaultActive = ''
+      this.defaultOpeneds = ['userClass', 'userInfo']
+    }
+    else {
+      this.items = this.adminItems
+      this.defaultActive = 'allUser'
+      this.defaultOpeneds = ['classAdmin']
+    }
+
+
   }
 };
 </script>

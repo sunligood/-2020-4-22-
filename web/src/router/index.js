@@ -41,42 +41,42 @@ export default new Router({
                     meta: { title: '消息管理' }
                 },
                 {
-                    path: '/form',
-                    component: resolve => require(['../components/page/BaseForm.vue'], resolve),
-                    meta: { title: '基本表单' }
+                    path: '/userClass',
+                    component: resolve => require(['../components/page/user/userClass.vue'], resolve),
+                    meta: { title: '班级' }
                 },
                 {
-                    path: '/tree1',
-                    component: resolve => require(['../components/page/tree1.vue'], resolve),
-                    meta: { title: '基本树' }
+                    path: '/leavingMsg',
+                    component: resolve => require(['../components/page/user/leavingMsg.vue'], resolve),
+                    meta: { title: '班级留言' }
                 },
                 {
-                    path: '/tree2',
-                    component: resolve => require(['../components/page/tree2.vue'], resolve),
-                    meta: { title: '可选择树' }
+                    path: '/classCommunication',
+                    component: resolve => require(['../components/page/user/classCommunication.vue'], resolve),
+                    meta: { title: '班级通讯' }
                 },
                 {
-                    path: '/tree3',
-                    component: resolve => require(['../components/page/tree3.vue'], resolve),
-                    meta: { title: '可编辑树' }
-                },
-                {
-                    // 富文本编辑器组件
-                    path: '/tree4',
-                    component: resolve => require(['../components/page/tree4.vue'], resolve),
-                    meta: { title: '可查询树' }
+                    path: '/classPicture',
+                    component: resolve => require(['../components/page/user/classPicture.vue'], resolve),
+                    meta: { title: '班级相册' }
                 },
                 {
                     // 富文本编辑器组件
-                    path: '/tree5',
-                    component: resolve => require(['../components/page/tree5.vue'], resolve),
-                    meta: { title: '节点选择' }
+                    path: '/userInfo',
+                    component: resolve => require(['../components/page/user/userInfo.vue'], resolve),
+                    meta: { title: '个人信息' }
                 },
                 {
                     // 富文本编辑器组件
-                    path: '/editor',
-                    component: resolve => require(['../components/page/VueEditor.vue'], resolve),
-                    meta: { title: '富文本编辑器' }
+                    path: '/changePwd',
+                    component: resolve => require(['../components/page/user/changePwd.vue'], resolve),
+                    meta: { title: '修改密码' }
+                },
+                {
+                    // 富文本编辑器组件
+                    path: '/ownPeace',
+                    component: resolve => require(['../components/page/user/ownPeace.vue'], resolve),
+                    meta: { title: '个人空间' }
                 },
                 {
                     // markdown组件
