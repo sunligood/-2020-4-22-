@@ -8,12 +8,12 @@ const path = require('path')
 app.use(bodyParser.json())
 
 //加载静态
-app.use(express.static('views'))
+// app.use(express.static('views'))
+app.use(express.static('bin'))
 app.use('/public', express.static('public'))
 
 //加载路由
 routes(app)
-console.log(path.resolve('public','uploadImg', './'))
 //启动配置
 const prot = 3000
 const host = 'localhost'

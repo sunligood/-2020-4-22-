@@ -3,6 +3,17 @@
         <router-view></router-view>
     </div>
 </template>
+<script>
+export default {
+    mounted () {
+        console.log(111)
+        this.$axios.post('/queryStu')
+            .then(res => {
+                console.log(res)
+            })
+    }
+}
+</script>
 <style>
     @import "./assets/css/main.css";
     /* @import "./assets/css/color-dark.css"; */     /*深色主题*/
