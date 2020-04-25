@@ -2,7 +2,7 @@
   <div class="classPicture">
     <vDetail></vDetail>
     <div class="main">
-      <div class="cardItem" v-for="item in 8" :key="item">
+      <div class="cardItem" v-for="item in 8" :key="item" @click="openPicture()">
         <div class="imgB">
           <img
             src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="btnBox">
-      <el-button type="primary" @click="sendMsg()">上传图片</el-button>
+      <el-button type="primary" @click="uploadImg()">上传图片</el-button>
     </div>
   </div>
 </template>
@@ -33,13 +33,24 @@ export default {
     }
   },
   methods: {
+    uploadImg() {
 
+    },
+    openPicture() {
+      let imgHTML = '<img style="width: 100%;" src = "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"alt/>'
+      this.$alert(imgHTML, '', {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '关闭',
+        showConfirmButton: true,
+        center: true
+      });
+    }
 
   }
 
 }
 
-</script>
+</script>``
 <style scoped>
 .main {
   margin-top: 10px;
@@ -64,5 +75,11 @@ export default {
 .btnBox {
   margin-top: 20px;
   text-align: center;
+}
+.openPicture {
+  width: 500px;
+}
+.openPicture img {
+  width: 100%;
 }
 </style>
