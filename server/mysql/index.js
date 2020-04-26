@@ -6,7 +6,8 @@ const Mysql = require('mysql');
     port: '3306',
     user: 'root',
     password: '123456',
-    database: 'school_db'
+    database: 'school_db',
+    multipleStatements: true //允许多条sql同时查询
   })
   connection.connect((error) => {
     if (error) {
