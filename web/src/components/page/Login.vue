@@ -32,8 +32,8 @@ export default {
   data: function () {
     return {
       ruleForm: {
-        username: 'admin',
-        password: '123123'
+        username: '',
+        password: ''
       },
       rules: {
         username: [
@@ -49,9 +49,21 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          localStorage.setItem('ms_username', this.ruleForm.username);
-          if (this.ruleForm.username != 'admin') this.$router.push('/userClass');
-          else this.$router.push('/allUser');
+          let parms = {
+            name: this.ruleForm.username,
+            password: this.ruleForm.password
+          }
+          this.$axios.post('/login', parms)
+            .then(res => {
+              if (res.data.code == 1) {
+                localStorage.setItem('ms_username', this.ruleForm.username);
+                if (this.ruleForm.username != 'admin') this.$router.push('/userClass');
+                else this.$router.push('/allUser');
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            })
+
         } else {
           console.log('error submit!!');
           return false;

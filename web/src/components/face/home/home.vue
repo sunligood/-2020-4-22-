@@ -86,17 +86,17 @@ export default {
 
 /* main css */
 .home {
-  max-width: 800px;
-  margin: 0 auto;
 }
 .banner {
-  width: 98%;
+  max-width: 800px;
   margin: 20px auto;
+  padding: 0 20px;
 }
 
 .news-box {
   position: relative;
-  width: 98%;
+  max-width: 800px;
+  padding: 0 20px;
   margin: 0 auto;
 }
 .news-box .news-title {
