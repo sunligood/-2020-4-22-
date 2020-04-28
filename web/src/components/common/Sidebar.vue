@@ -173,6 +173,9 @@ export default {
       this.defaultOpeneds = ['classAdmin']
     }
 
+    // 获取query
+    this.defaultActive = this.$route.path.split('/')[1]
+
 
   }
 };

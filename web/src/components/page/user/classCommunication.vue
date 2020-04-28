@@ -2,12 +2,6 @@
   <div class="classCommunication">
     <vDetail></vDetail>
     <div class="main">
-      <div class="searchBox">
-        <div class="inputBox">
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
-        </div>
-        <el-button type="primary">查询</el-button>
-      </div>
       <div class="tableBox">
         <el-table
           :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
@@ -22,9 +16,14 @@
           ></el-table-column>
           <el-table-column align="center" prop="name" label="姓名" width="80"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
-          <el-table-column align="center" prop="phone" label="电话"></el-table-column>
+          <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
           <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
-          <el-table-column align="center" prop="address" show-overflow-tooltip="true" label="内容"></el-table-column>
+          <el-table-column align="center" prop="address" show-overflow-tooltip="true" label="现住址"></el-table-column>
+          <el-table-column align="right">
+            <template slot="header" slot-scope="scope">
+              <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div class="page">
@@ -51,13 +50,7 @@ export default {
   data() {
     return {
       search: '',
-      tableData: [{
-        name: '王小虎',
-        sex: '男',
-        phone: '13111111111',
-        email: 'sunligood@githum.com',
-        address: '这里是留言内容这里是留言内容这里是留言内容',
-      }],
+      tableData: [],
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
@@ -68,59 +61,30 @@ export default {
     indexMethod(index) {
       return index++;
     },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    // 删除
-    handleDelete(index, row) {
-      this.$confirm('确定删除此用户？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 确定操作
-        this.$message({
-          type: 'success',
-          message: row
-        });
-      }).catch(() => {
-        // 取消操作
-      });
-    },
     // page fn
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-    },
-    // 提交留言
-    sendMsg() {
-      this.$prompt('请输入留言内容', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        roundButton: true
-      }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你输入的留言内容是: ' + value
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-      });
     }
-
+  },
+  created() {
+    let parms = {
+      systems: sessionStorage.getItem('systems'),
+      major: sessionStorage.getItem('major'),
+      class: sessionStorage.getItem('class'),
+    }
+    this.$axios.post('/queryStu', parms)
+      .then(res => {
+        this.tableData = res.data.data
+      })
   }
 
 }
 
 </script>
 <style scoped>
-.classCommunication {
-}
 .main {
   background-color: #fff;
   margin-top: 10px;

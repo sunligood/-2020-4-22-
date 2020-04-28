@@ -14,12 +14,17 @@
             type="index"
             :index="indexMethod(1)"
           ></el-table-column>
-          <el-table-column align="center" prop="name" label="姓名" width="80"></el-table-column>
+          <el-table-column align="center" prop="author" label="姓名" width="80"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
-          <el-table-column align="center" prop="phone" label="电话"></el-table-column>
+          <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
           <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
           <el-table-column align="center" prop="content" show-overflow-tooltip="true" label="内容"></el-table-column>
-          <el-table-column align="center" prop="time" show-overflow-tooltip="true" label="留言时间"></el-table-column>
+          <el-table-column
+            align="center"
+            prop="createdDate"
+            show-overflow-tooltip="true"
+            label="留言时间"
+          ></el-table-column>
         </el-table>
       </div>
       <div class="page">
@@ -49,14 +54,7 @@ export default {
   data() {
     return {
       search: '',
-      tableData: [{
-        name: '王小虎',
-        sex: '男',
-        phone: '13111111111',
-        email: 'sunligood@githum.com',
-        content: '这里是留言内容这里是留言内容这里是留言内容',
-        time: '2020年4月24日14:32:19'
-      }],
+      tableData: [],
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
@@ -70,28 +68,38 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
     },
-    // 删除
-    handleDelete(index, row) {
-      this.$confirm('确定删除此用户？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 确定操作
-        this.$message({
-          type: 'success',
-          message: row
-        });
-      }).catch(() => {
-        // 取消操作
-      });
-    },
     // page fn
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    getTime() {     	//获取时间
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth();
+      let day = date.getDate();
+      let hour = date.getHours();
+      let minute = date.getMinutes();
+      let second = date.getSeconds();
+      if (month < 10) {
+        month = '0' + month;
+      }
+      if (day < 10) {
+        day = '0' + day;
+      }
+      if (hour < 10) {
+        hour = '0' + hour;
+      }
+      if (minute < 10) {
+        minute = '0' + minute;
+      }
+      if (second < 10) {
+        second = '0' + second;
+      }
+      let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      return time
     },
     // 提交留言
     sendMsg() {
@@ -100,18 +108,52 @@ export default {
         cancelButtonText: '取消',
         roundButton: true
       }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '你输入的留言内容是: ' + value
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-      });
-    }
+        let parms = {
+          content: value,
+          author: sessionStorage.getItem('name'),
+          sex: sessionStorage.getItem('sex'),
+          email: sessionStorage.getItem('email'),
+          createdDate: this.getTime(),
+          systems: sessionStorage.getItem('systems'),
+          major: sessionStorage.getItem('major'),
+          class: sessionStorage.getItem('class'),
+          mobile: sessionStorage.getItem('mobile')
+        }
 
+        this.$axios.post('/addMessage', parms)
+          .then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                type: 'success',
+                message: '新增成功！'
+              });
+
+              let req = {
+                systems: sessionStorage.getItem('systems'),
+                major: sessionStorage.getItem('major'),
+                class: sessionStorage.getItem('class'),
+              }
+              this.$axios.post('/queryMessage', req)
+                .then(res => {
+                  this.tableData = res.data.data
+                })
+            }
+          })
+      }).catch(() => {
+
+      })
+    },
+  },
+  created() {
+    let parms = {
+      systems: sessionStorage.getItem('systems'),
+      major: sessionStorage.getItem('major'),
+      class: sessionStorage.getItem('class'),
+    }
+    this.$axios.post('/queryMessage', parms)
+      .then(res => {
+        this.tableData = res.data.data
+      })
   }
 
 }

@@ -15,11 +15,11 @@
             :index="indexMethod(1)"
           ></el-table-column>
           <el-table-column align="center" prop="name" label="姓名" width="80"></el-table-column>
-          <el-table-column align="center" prop="tie" label="系别"></el-table-column>
+          <el-table-column align="center" prop="systems" label="系别"></el-table-column>
           <el-table-column align="center" prop="major" label="专业"></el-table-column>
           <el-table-column align="center" prop="class" label="班级"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
-          <el-table-column align="center" prop="phone" label="电话"></el-table-column>
+          <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
           <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
           <el-table-column align="center" prop="address" show-overflow-tooltip="true" label="现住地址"></el-table-column>
         </el-table>
@@ -48,16 +48,7 @@ export default {
   data() {
     return {
       search: '',
-      tableData: [{
-        name: '王小虎',
-        tie: '计算机',
-        major: '网页设计',
-        address: '上海市普陀区金沙江路 1518 弄',
-        class: '网页设计2班',
-        sex: '男',
-        phone: '13111111111',
-        email: 'sunligood@githum.com'
-      }],
+      tableData: [],
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
@@ -71,22 +62,6 @@ export default {
     handleEdit(index, row) {
       console.log(index, row);
     },
-    // 删除
-    handleDelete(index, row) {
-      this.$confirm('确定删除此用户？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 确定操作
-        this.$message({
-          type: 'success',
-          message: row
-        });
-      }).catch(() => {
-        // 取消操作
-      });
-    },
     // page fn
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -94,7 +69,32 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     }
+  },
+  created() {
+    let data = this.$route.query.userData
+    sessionStorage.setItem('systems', data.systems)
+    sessionStorage.setItem('major', data.major)
+    sessionStorage.setItem('class', data.class)
+    sessionStorage.setItem('address', data.address)
+    sessionStorage.setItem('email', data.email)
+    sessionStorage.setItem('emp_no', data.emp_no)
+    sessionStorage.setItem('explain', data.explain)
+    sessionStorage.setItem('image', data.image)
+    sessionStorage.setItem('like', data.like)
+    sessionStorage.setItem('mobile', data.mobile)
+    sessionStorage.setItem('name', data.name)
+    sessionStorage.setItem('userID', data.userID)
+    sessionStorage.setItem('sex', data.sex)
 
+    let parms = {
+      systems: data.systems,
+      major: data.major,
+      class: data.class
+    }
+    this.$axios.post('/queryStu', parms)
+      .then(res => {
+        this.tableData = res.data.data
+      })
   }
 
 }

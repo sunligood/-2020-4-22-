@@ -57,8 +57,8 @@ export default {
             .then(res => {
               if (res.data.code == 1) {
                 localStorage.setItem('ms_username', this.ruleForm.username);
-                if (this.ruleForm.username != 'admin') this.$router.push('/userClass');
-                else this.$router.push('/allUser');
+                if (this.ruleForm.username != 'admin') this.$router.push({ path: '/userClass', query: { userData: res.data.data } });
+                else this.$router.push({ path: '/allUser' });
               } else {
                 this.$message.error(res.data.msg);
               }
