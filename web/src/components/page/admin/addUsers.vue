@@ -8,8 +8,8 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="学号" prop="studentNo">
-          <el-input v-model="ruleForm.studentNo" placeholder="请输入学号"></el-input>
+        <el-form-item label="学号" prop="emp_no">
+          <el-input v-model="ruleForm.emp_no" placeholder="请输入学号"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
@@ -17,23 +17,32 @@
         <el-form-item label="性别" prop="sex">
           <el-input v-model="ruleForm.sex" placeholder="请输入性别"></el-input>
         </el-form-item>
-        <el-form-item label="系别" prop="tie">
-          <el-select v-model="ruleForm.tie" placeholder="请选择系别">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="系别" prop="systems">
+          <el-select
+            v-model="ruleForm.systems"
+            placeholder="请选择系别"
+            @change="getChild(ruleForm.systems)"
+          >
+            <el-option
+              v-for="obj in  systemsList"
+              :key="obj.code"
+              :label="obj.name"
+              :value="obj.name"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="专业" prop="major">
           <el-select v-model="ruleForm.major" placeholder="请选择专业">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option
+              v-for="item in childList"
+              :key="item.code"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="班级" prop="class">
-          <el-select v-model="ruleForm.class" placeholder="请选择班级">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
+          <el-input v-model="ruleForm.class" placeholder="请输入班级"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="mobile">
           <el-input v-model="ruleForm.mobile" placeholder="请输入电话"></el-input>
@@ -54,42 +63,51 @@
 </template>
 
 <script>
+import { sysList } from '../../../mock/data/sysList'
 export default {
   data() {
     return {
+      systemsList: [],
+      childList: [],
       ruleForm: {
-        studentNo: '',
+        emp_no: '',
         name: '',
         sex: '',
-        tie: '',
+        systems: '',
         major: '',
         class: '',
         mobile: '',
         email: '',
-        address: ''
+        address: '',
+        root: 0
       },
       rules: {
+        emp_no: [
+          { required: true, message: '请输入学号', trigger: 'blur' }
+        ],
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+        sex: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        systems: [
+          { required: true, message: '请选择系别', trigger: 'change' }
         ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        major: [
+          { required: true, message: '请选择专业', trigger: 'change' }
         ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+        class: [
+          { required: true, message: '请选择班级', trigger: 'change' }
         ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' }
         ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        email: [
+          { required: true, message: '请输入email', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入地址', trigger: 'blur' }
         ]
       }
     }
@@ -98,16 +116,39 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
+          this.$axios.post('/addStu', this.ruleForm)
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message({
+                  message: '注册成功！',
+                  type: 'success'
+                });
+              }
+            })
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    getChild(name) {
+      let parentName = name
+      this.ruleForm.major = ''
+      for (let i = 0; i < this.systemsList.length; i++) {
+        for (let key in this.systemsList[i]) {
+          if (this.systemsList[i]['name'] == parentName) {
+            this.childList = this.systemsList[i]['child']
+            return false
+          }
+        }
+      }
     }
+  },
+  created() {
+
+  },
+  mounted() {
+    this.systemsList = sysList
   }
 
 }

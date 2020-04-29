@@ -3,7 +3,6 @@
     <v-head></v-head>
     <v-sidebar></v-sidebar>
     <div class="content-box" :class="{'content-collapse':collapse}">
-      <v-tags></v-tags>
       <div class="content">
         <transition name="move" mode="out-in">
           <keep-alive :include="tagsList">
@@ -15,18 +14,18 @@
     <el-dialog title="密码修改" :visible.sync="isShow" v-dialogDrag :before-close="handleClose">
       <el-form :model="form">
         <el-form-item label="原密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.oldPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="新密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.newPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" :label-width="formLabelWidth">
-          <el-input show-password v-model="form.name" autocomplete="off"></el-input>
+          <el-input show-password v-model="form.checkPassword" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="hideDailog">取 消</el-button>
-        <el-button type="primary" @click="hideDailog">确 定</el-button>
+        <el-button type="primary" @click="changePwd()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -35,7 +34,6 @@
 <script>
 import vHead from "./Header.vue";
 import vSidebar from "./Sidebar.vue";
-import vTags from "./Tags.vue";
 import bus from "./bus";
 import { mapGetters } from "vuex";
 import { mapActions } from "vuex";
@@ -45,14 +43,9 @@ export default {
       tagsList: [],
       collapse: false,
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        oldPassword: '',
+        newPassword: '',
+        checkPassword: ''
       },
       formLabelWidth: '120px'
     };
@@ -71,12 +64,38 @@ export default {
           //this.$store.dispatch('dailog/hideDailog')
         }).bind(this)
         .catch(_ => { });
+    },
+    changePwd() {
+      if (this.form.newPassword != this.form.checkPassword) {
+        this.$message.error('请确认密码是否一致！')
+        return false
+      }
+
+      if (this.form.oldPassword != sessionStorage.getItem("password")) {
+        this.$message.error('旧密码错误！')
+        return false
+      }
+      let parms = {
+        userID: sessionStorage.getItem("userID"),
+        password: this.form.newPassword
+      }
+      this.$axios.post('/updateStu', parms)
+        .then(res => {
+          if (res.data.code == 1) {
+            this.$message({
+              type: 'success',
+              message: '修改成功！'
+            })
+            this.isShow = false
+          } else {
+            this.$message.error('修改失败！')
+          }
+        })
     }
   },
   components: {
     vHead,
-    vSidebar,
-    vTags
+    vSidebar
   },
   created() {
     bus.$on("collapse", msg => {

@@ -41,99 +41,44 @@ export default new Router({
                     meta: { title: '消息管理' }
                 },
                 {
-                    path: '/form',
-                    component: resolve => require(['../components/page/BaseForm.vue'], resolve),
-                    meta: { title: '基本表单' }
+                    path: '/userClass',
+                    component: resolve => require(['../components/page/user/userClass.vue'], resolve),
+                    meta: { title: '班级' }
                 },
                 {
-                    path: '/tree1',
-                    component: resolve => require(['../components/page/tree1.vue'], resolve),
-                    meta: { title: '基本树' }
+                    path: '/leavingMsg',
+                    component: resolve => require(['../components/page/user/leavingMsg.vue'], resolve),
+                    meta: { title: '班级留言' }
                 },
                 {
-                    path: '/tree2',
-                    component: resolve => require(['../components/page/tree2.vue'], resolve),
-                    meta: { title: '可选择树' }
+                    path: '/classCommunication',
+                    component: resolve => require(['../components/page/user/classCommunication.vue'], resolve),
+                    meta: { title: '班级通讯' }
                 },
                 {
-                    path: '/tree3',
-                    component: resolve => require(['../components/page/tree3.vue'], resolve),
-                    meta: { title: '可编辑树' }
-                },
-                {
-                    // 富文本编辑器组件
-                    path: '/tree4',
-                    component: resolve => require(['../components/page/tree4.vue'], resolve),
-                    meta: { title: '可查询树' }
+                    path: '/classPicture',
+                    component: resolve => require(['../components/page/user/classPicture.vue'], resolve),
+                    meta: { title: '班级相册' }
                 },
                 {
                     // 富文本编辑器组件
-                    path: '/tree5',
-                    component: resolve => require(['../components/page/tree5.vue'], resolve),
-                    meta: { title: '节点选择' }
+                    path: '/userInfo',
+                    component: resolve => require(['../components/page/user/userInfo.vue'], resolve),
+                    meta: { title: '个人信息' }
                 },
                 {
                     // 富文本编辑器组件
-                    path: '/editor',
-                    component: resolve => require(['../components/page/VueEditor.vue'], resolve),
-                    meta: { title: '富文本编辑器' }
+                    path: '/changePwd',
+                    component: resolve => require(['../components/page/user/changePwd.vue'], resolve),
+                    meta: { title: '修改密码' }
                 },
                 {
-                    // markdown组件
-                    path: '/markdown',
-                    component: resolve => require(['../components/page/Markdown.vue'], resolve),
-                    meta: { title: 'markdown编辑器' }
-                },
-                {
-                    // 图片上传组件
-                    path: '/upload',
-                    component: resolve => require(['../components/page/Upload.vue'], resolve),
-                    meta: { title: '文件上传' }
-                },
-                {
-                    // vue-schart组件
-                    path: '/charts',
-                    component: resolve => require(['../components/page/BaseCharts.vue'], resolve),
-                    meta: { title: 'schart图表' }
-                },
-                {
-                    // 拖拽列表组件
-                    path: '/drag',
-                    component: resolve => require(['../components/page/DragList.vue'], resolve),
-                    meta: { title: '拖拽列表' }
-                },
-                {
-                    // 拖拽Dialog组件
-                    path: '/dialog',
-                    component: resolve => require(['../components/page/DragDialog.vue'], resolve),
-                    meta: { title: '拖拽弹框' }
-                },
-                {
-                    // 权限页面
-                    path: '/permission',
-                    component: resolve => require(['../components/page/Permission.vue'], resolve),
-                    meta: { title: '权限测试', permission: true }
-                },
-                {
-                    path: '/404',
-                    component: resolve => require(['../components/page/404.vue'], resolve),
-                    meta: { title: '404' }
-                },
-                {
-                    path: '/403',
-                    component: resolve => require(['../components/page/403.vue'], resolve),
-                    meta: { title: '403' }
-                },
-                {
-                    path: '/admin',
-                    component: resolve => require(['../components/page/admin.vue'], resolve),
-                    meta: { title: '用户信息' }
-                },
-                {
-                    path: '/usermanager',
-                    component: resolve => require(['../components/page/sysmanager/usermanager.vue'], resolve),
-                    meta: { title: '用户管理' }
+                    // 富文本编辑器组件
+                    path: '/ownPeace',
+                    component: resolve => require(['../components/page/user/ownPeace.vue'], resolve),
+                    meta: { title: '个人空间' }
                 }
+
             ]
         },
         {
