@@ -17,14 +17,9 @@
           <el-table-column align="center" prop="author" label="姓名" width="80"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
           <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
-          <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
-          <el-table-column align="center" prop="content" show-overflow-tooltip="true" label="内容"></el-table-column>
-          <el-table-column
-            align="center"
-            prop="createdDate"
-            show-overflow-tooltip="true"
-            label="留言时间"
-          ></el-table-column>
+          <el-table-column align="center" prop="email" label="email"></el-table-column>
+          <el-table-column align="center" prop="content" label="内容"></el-table-column>
+          <el-table-column align="center" prop="createdDate" label="留言时间"></el-table-column>
         </el-table>
       </div>
       <div class="page">
@@ -47,6 +42,7 @@
 
 <script>
 import vDetail from './ccommon/classDetail'
+import { badWords } from '../../../mock/data/badWords'
 export default {
   components: {
     vDetail
@@ -108,6 +104,7 @@ export default {
         cancelButtonText: '取消',
         roundButton: true
       }).then(({ value }) => {
+
         let parms = {
           content: value,
           author: sessionStorage.getItem('name'),
@@ -136,13 +133,28 @@ export default {
               this.$axios.post('/queryMessage', req)
                 .then(res => {
                   this.tableData = res.data.data
+                  for (let i = 0; i < this.tableData.length; i++) {
+                    for (let key in this.tableData[i]) {
+                      if (key == 'content') {
+                        let str = this.tableData[i][key]
+                        if (str != null) {
+                          this.tableData[i][key] = str.replace(badWords, function (s) {
+                            var str = "";
+                            for (var i = 0; i < s.length; i++) {
+                              str += "*";
+                            }
+                            return str;
+                          });
+                        }
+
+                      }
+                    }
+                  }
                 })
             }
           })
-      }).catch(() => {
-
       })
-    },
+    }
   },
   created() {
     let parms = {
@@ -153,6 +165,23 @@ export default {
     this.$axios.post('/queryMessage', parms)
       .then(res => {
         this.tableData = res.data.data
+        for (let i = 0; i < this.tableData.length; i++) {
+          for (let key in this.tableData[i]) {
+            if (key == 'content') {
+              let str = this.tableData[i][key]
+              if (str != null) {
+                this.tableData[i][key] = str.replace(badWords, function (s) {
+                  var str = "";
+                  for (var i = 0; i < s.length; i++) {
+                    str += "*";
+                  }
+                  return str;
+                });
+              }
+
+            }
+          }
+        }
       })
   }
 

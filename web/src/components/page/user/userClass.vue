@@ -20,8 +20,8 @@
           <el-table-column align="center" prop="class" label="班级"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
           <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
-          <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
-          <el-table-column align="center" prop="address" show-overflow-tooltip="true" label="现住地址"></el-table-column>
+          <el-table-column align="center" prop="email" label="email"></el-table-column>
+          <el-table-column align="center" prop="address" label="现住地址"></el-table-column>
         </el-table>
       </div>
       <div class="page">
@@ -78,13 +78,14 @@ export default {
     sessionStorage.setItem('address', data.address)
     sessionStorage.setItem('email', data.email)
     sessionStorage.setItem('emp_no', data.emp_no)
-    sessionStorage.setItem('explain', data.explain)
+    sessionStorage.setItem('explains', data.explains)
     sessionStorage.setItem('image', data.image)
-    sessionStorage.setItem('like', data.like)
+    sessionStorage.setItem('hobby', data.hobby)
     sessionStorage.setItem('mobile', data.mobile)
     sessionStorage.setItem('name', data.name)
     sessionStorage.setItem('userID', data.userID)
     sessionStorage.setItem('sex', data.sex)
+    sessionStorage.setItem('password', data.password)
 
     let parms = {
       systems: data.systems,

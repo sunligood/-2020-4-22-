@@ -1,13 +1,43 @@
 <template>
   <div class="ownPeace">
     <div class="title">个人简介</div>
-    <div class="img">
-      <img
-        src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-        alt
-      />
-      <el-button type="primary" v-show="isEdit">上传头像</el-button>
+    <div class="imgMainBox">
+      <div class="img">
+        <img :src="imageUrl" alt />
+        <!-- <el-button type="primary" v-show="isEdit">上传头像</el-button> -->
+      </div>
+      <!-- <el-upload
+      class="avatar-uploader"
+      action="/personalImg"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload"
+      v-show="isEdit"
+      :data="uploadData"
+    >
+      <el-button size="small" type="primary" class="uploadBtn">点击上传</el-button>-->
+      <div class="uploadBox">
+        <el-upload
+          class="upload-demo"
+          drag
+          action="/personalImg"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+          multiple
+          v-show="isEdit"
+          :data="uploadData"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">
+            将文件拖到此处，或
+            <em>点击上传</em>
+          </div>
+        </el-upload>
+      </div>
     </div>
+    <!-- </el-upload> -->
+
     <div class="formBox">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="学号" prop="studentNo">
@@ -56,11 +86,11 @@
         <el-form-item label="现住地址" prop="address">
           <el-input v-model="ruleForm.address" :disabled="isDisabled" placeholder="请输入现住地址"></el-input>
         </el-form-item>
-        <el-form-item label="爱好" prop="like">
-          <el-input v-model="ruleForm.like" :disabled="isDisabled" placeholder="请输入爱好"></el-input>
+        <el-form-item label="爱好" prop="hobby">
+          <el-input v-model="ruleForm.hobby" :disabled="isDisabled" placeholder="请输入爱好"></el-input>
         </el-form-item>
-        <el-form-item label="个人说明" prop="explain">
-          <el-input v-model="ruleForm.explain" :disabled="isDisabled" placeholder="请输入个人说明"></el-input>
+        <el-form-item label="个人说明" prop="explains">
+          <el-input v-model="ruleForm.explains" :disabled="isDisabled" placeholder="请输入个人说明"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-show="!isEdit" @click="changStatus('edit')">编辑个人信息</el-button>
@@ -73,222 +103,18 @@
 </template>
 
 <script>
+import { sysList } from '../../../mock/data/sysList'   // 系别库
 export default {
   data() {
     return {
       ruleForm: {},
+      defaultForm: {},
       isDisabled: true,
       isEdit: false,
-      systemsList: [
-        {
-          code: 0,
-          name: '经济管理学院',
-          child: [
-            {
-              code: 0,
-              name: '工商管理专业',
-              child: []
-            },
-            {
-              code: 1,
-              name: '财务管理专业',
-              child: []
-            },
-            {
-              code: 2,
-              name: '金融工程专业',
-              child: []
-            },
-            {
-              code: 3,
-              name: '工程管理专业',
-              child: []
-            },
-            {
-              code: 4,
-              name: '物流管理专业',
-              child: []
-            },
-            {
-              code: 5,
-              name: '旅游管理专业',
-              child: []
-            },
-            {
-              code: 6,
-              name: '酒店管理专业',
-              child: []
-            }
-          ]
-        },
-        {
-          code: 1,
-          name: '机械与动力工程学院',
-          child: [
-            {
-              code: 0,
-              name: '能源与动力工程专业介绍',
-              child: []
-            },
-            {
-              code: 1,
-              name: '材料成型与控制工程专业',
-              child: []
-            },
-            {
-              code: 2,
-              name: '车辆工程专业',
-              child: []
-            },
-            {
-              code: 3,
-              name: '机械工程专业',
-              child: []
-            }
-          ]
-        },
-        {
-          code: 2,
-          name: '土木建筑工程学院',
-          child: [
-            {
-              code: 0,
-              name: '土木工程专业',
-              child: []
-            },
-            {
-              code: 1,
-              name: '工程造价专业',
-              child: []
-            }
-          ]
-        },
-        {
-          code: 3,
-          name: '电子与电气工程学院',
-          child: [
-            {
-              code: 0,
-              name: '电气工程及其自动化'
-            },
-            {
-              code: 1,
-              name: '光电信息科学与工程'
-            },
-            {
-              code: 2,
-              name: '测控技术与仪器'
-            },
-            {
-              code: 3,
-              name: '自动化'
-            }
-          ]
-        },
-        {
-          code: 4,
-          name: '计算机与信息技术学院',
-          child: [
-            {
-              code: 0,
-              name: '计算机科学与技术专业'
-            },
-            {
-              code: 1,
-              name: '软件工程专业'
-            },
-            {
-              code: 2,
-              name: '物联网工程专业'
-            },
-            {
-              code: 3,
-              name: '电子商务专业'
-            },
-            {
-              code: 4,
-              name: '数据科学与大数据技术专业'
-            }
-          ]
-        },
-        {
-          code: 5,
-          name: '轨道交通学院',
-          child: [
-            {
-              code: 0,
-              name: '交通运输'
-            },
-            {
-              code: 1,
-              name: '轨道交通信号与控制'
-            }
-          ]
-        },
-        {
-          code: 6,
-          name: '艺术学院',
-          child: [
-            {
-              code: 0,
-              name: '数学媒体艺术专业'
-            },
-            {
-              code: 1,
-              name: '风景园林专业'
-            },
-            {
-              code: 2,
-              name: '音乐学专业'
-            },
-            {
-              code: 3,
-              name: '视觉传达设计专业'
-            },
-            {
-              code: 4,
-              name: '环境设计专业'
-            }
-          ]
-        },
-        {
-          code: 7,
-          name: '外国语学院',
-          child: [
-            {
-              code: 0,
-              name: '英语专业'
-            },
-            {
-              code: 1,
-              name: '商务英语'
-            }
-          ]
-        },
-        {
-          code: 8,
-          name: '化学工程学院',
-          child: [
-            {
-              code: 0,
-              name: '化学工程与工艺专业'
-            },
-            {
-              code: 1,
-              name: '资源循环科学与工程专业'
-            },
-            {
-              code: 2,
-              name: '制药工程专业'
-            },
-            {
-              code: 3,
-              name: '过程装备与控制工程专业'
-            }
-          ]
-        }
-      ],
-      childList: []
+      systemsList: [],
+      childList: [],
+      imageUrl: '',
+      uploadData: {}
     }
   },
   methods: {
@@ -319,16 +145,36 @@ export default {
                 });
                 this.isEdit = false
                 this.isDisabled = true
+
+                for (let key in this.defaultForm) {
+                  for (let key2 in this.ruleForm) {
+                    if (key == key2) {
+                      console.log(this.defaultForm[key], this.ruleForm[key2])
+                      if (this.defaultForm[key] != this.ruleForm[key2]) {
+                        console.log(key, this.ruleForm[key2], 1111)
+                        sessionStorage.setItem(key, this.ruleForm[key2])
+                      }
+                    }
+                  }
+                }
               } else {
                 this.$message.error('修改失败！');
               }
-
             })
-        } else {
-          console.log('error submit!!');
-          return false;
         }
       });
+    },
+    setDatas(newObj, oldObj) {
+      for (let key in oldObj) {
+        for (let key2 in newObj) {
+          if (key == key2) {
+            if (oldObj[key] != newObj[key2]) {
+              console.log(key, newObj[key2], 1111)
+              sessionStorage.setItem(key, newObj[key2])
+            }
+          }
+        }
+      }
     },
     getChild(name) {
       let parentName = name
@@ -341,9 +187,38 @@ export default {
           }
         }
       }
+    },
+    handleAvatarSuccess(res, file) {
+      if (res.code == 1) {
+        this.$message({
+          type: 'success',
+          message: res.msg
+        })
+        this.imageUrl = URL.createObjectURL(file.raw);
+        if (this.imageUrl != sessionStorage.getItem('image')) {
+          sessionStorage.setItem('image', this.imageUrl)
+        }
+      } else {
+        this.$message.error(res.msg)
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
     }
   },
   created() {
+    this.uploadData = {
+      userID: sessionStorage.getItem('userID')
+    }
     this.ruleForm = {
       emp_no: sessionStorage.getItem('emp_no'),
       name: sessionStorage.getItem('name'),
@@ -355,9 +230,24 @@ export default {
       email: sessionStorage.getItem('email'),
       address: sessionStorage.getItem('address'),
       image: sessionStorage.getItem('image'),
-      like: sessionStorage.getItem('like'),
-      explain: sessionStorage.getItem('explain')
+      hobby: sessionStorage.getItem('hobby'),
+      explains: sessionStorage.getItem('explains')
     }
+    this.defaultForm = {
+      emp_no: sessionStorage.getItem('emp_no'),
+      name: sessionStorage.getItem('name'),
+      sex: sessionStorage.getItem('sex'),
+      systems: sessionStorage.getItem('systems'),
+      major: sessionStorage.getItem('major'),
+      class: sessionStorage.getItem('class'),
+      mobile: sessionStorage.getItem('mobile'),
+      email: sessionStorage.getItem('email'),
+      address: sessionStorage.getItem('address'),
+      image: sessionStorage.getItem('image'),
+      hobby: sessionStorage.getItem('hobby'),
+      explains: sessionStorage.getItem('explains')
+    }
+    this.imageUrl = sessionStorage.getItem('image')
 
     for (let i = 0; i < this.systemsList.length; i++) {
       for (let key in this.systemsList[i]) {
@@ -367,6 +257,9 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    this.systemsList = sysList
   }
 }
 
@@ -383,12 +276,49 @@ export default {
 }
 .img {
   width: 200px;
+  height: 200px;
   margin: 10px 10px 10px 60px;
+  border: 1px solid #ccc;
 }
 .img img {
   width: 100%;
+  height: 100%;
 }
 .formBox {
   max-width: 500px;
+}
+.imgMainBox {
+  display: flex;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+  position: relative;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.uploadBox {
+  position: relative;
+  top: 20px;
+}
+.uploadBtn {
+  /* margin: 0 10px 10px 80px; */
 }
 </style>

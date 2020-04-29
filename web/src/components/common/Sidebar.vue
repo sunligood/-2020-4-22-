@@ -101,10 +101,10 @@ export default {
           index: 'userInfo',
           title: '个人信息',
           subs: [
-            {
-              index: 'changePwd',
-              title: '修改密码'
-            },
+            // {
+            //   index: 'changePwd',
+            //   title: '修改密码'
+            // },
             {
               index: 'ownPeace',
               title: '个人空间'
@@ -158,7 +158,6 @@ export default {
     bus.$on("collapse", msg => {
       this.collapse = msg;
     });
-    // this.getMenuData("系统管理");
 
     // 管理者与用户显示不痛菜单
     var userName = localStorage.getItem('ms_username')

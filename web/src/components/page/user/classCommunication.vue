@@ -17,8 +17,8 @@
           <el-table-column align="center" prop="name" label="姓名" width="80"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
           <el-table-column align="center" prop="mobile" label="电话"></el-table-column>
-          <el-table-column align="center" prop="email" show-overflow-tooltip="true" label="email"></el-table-column>
-          <el-table-column align="center" prop="address" show-overflow-tooltip="true" label="现住址"></el-table-column>
+          <el-table-column align="center" prop="email" label="email"></el-table-column>
+          <el-table-column align="center" prop="address" label="现住址"></el-table-column>
           <el-table-column align="right">
             <template slot="header" slot-scope="scope">
               <el-input v-model="search" size="mini" placeholder="输入关键字搜索" />
