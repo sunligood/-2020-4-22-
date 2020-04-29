@@ -1,15 +1,14 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/face/home/home'
+import Posts from '@/components/face/posts'
+import PostsList from '@/components/face/postsList'
+import About from '@/components/face/about'
 
 Vue.use(Router);
 
 export default new Router({
     routes: [
-        {
-            path: '/',
-            redirect: '/home'
-        },
         {
             path: '/home',
             component: Home,
@@ -88,6 +87,18 @@ export default new Router({
         {
             path: '*',
             redirect: '/404'
-        }
+        },
+        {
+            path: '/posts',
+            component: Posts
+        },
+        {
+            path: '/postsList',
+            component: PostsList
+        },
+        {
+            path: '/about',
+            component: About
+        },
     ]
 })

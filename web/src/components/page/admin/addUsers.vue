@@ -79,57 +79,39 @@ export default {
         mobile: '',
         email: '',
         address: '',
-        root: 0
+        root: 0,
+        password: '123456'
       },
       rules: {
-        emp_no: [
-          { required: true, message: '请输入学号', trigger: 'blur' }
-        ],
-        name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        sex: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
-        ],
-        systems: [
-          { required: true, message: '请选择系别', trigger: 'change' }
-        ],
-        major: [
-          { required: true, message: '请选择专业', trigger: 'change' }
-        ],
-        class: [
-          { required: true, message: '请选择班级', trigger: 'change' }
-        ],
-        mobile: [
-          { required: true, message: '请输入电话', trigger: 'blur' }
-        ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ]
+        emp_no: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        sex: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        systems: [{ required: true, message: '请选择系别', trigger: 'change' }],
+        major: [{ required: true, message: '请选择专业', trigger: 'change' }],
+        class: [{ required: true, message: '请选择班级', trigger: 'change' }],
+        mobile: [{ required: true, message: '请输入电话', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入email', trigger: 'blur' }],
+        address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
       }
     }
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$axios.post('/addStu', this.ruleForm)
-            .then(res => {
-              if (res.data.code == 1) {
-                this.$message({
-                  message: '注册成功！',
-                  type: 'success'
-                });
-              }
-            })
+          this.$axios.post('/addStu', this.ruleForm).then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                message: '注册成功！',
+                type: 'success'
+              })
+            }
+          })
         }
-      });
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     getChild(name) {
       let parentName = name
@@ -144,15 +126,11 @@ export default {
       }
     }
   },
-  created() {
-
-  },
+  created() {},
   mounted() {
     this.systemsList = sysList
   }
-
 }
-
 </script>
 <style scoped>
 .addUsers {

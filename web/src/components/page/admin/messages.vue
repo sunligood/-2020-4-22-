@@ -56,7 +56,7 @@
       <div class="btnBox">
         <el-button type="primary">批量删除</el-button>
       </div>
-      <div class="pageBox">
+      <!-- <div class="pageBox">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -66,7 +66,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableData.length"
         ></el-pagination>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -94,10 +94,10 @@ export default {
   },
   methods: {
     indexMethod(index) {
-      return index++;
+      return index++
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      console.log(index, row)
     },
     // 删除
     handleDelete(index, row) {
@@ -105,21 +105,24 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // 确定操作
-        this.$axios.post('/deleteMessage', { msgID: [row.msgID] })
-          .then(res => {
-            if (res.data.code == 1) {
-              this.$message({
-                type: 'success',
-                message: res.data.msg
-              });
-              this.flushTable()
-            }
-          })
-      }).catch(() => {
-        // 取消操作
-      });
+      })
+        .then(() => {
+          // 确定操作
+          this.$axios
+            .post('/deleteMessage', { msgID: [row.msgID] })
+            .then(res => {
+              if (res.data.code == 1) {
+                this.$message({
+                  type: 'success',
+                  message: res.data.msg
+                })
+                this.flushTable()
+              }
+            })
+        })
+        .catch(() => {
+          // 取消操作
+        })
     },
     //批量删除
     deleteMore() {
@@ -136,36 +139,36 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // 确定操作
-        this.$axios.post('/deleteMessage', { msgID: idArr })
-          .then(res => {
+      })
+        .then(() => {
+          // 确定操作
+          this.$axios.post('/deleteMessage', { msgID: idArr }).then(res => {
             if (res.data.code == 1) {
               this.$message({
                 type: 'success',
                 message: res.data.msg
-              });
+              })
               this.flushTable()
             }
           })
-      }).catch(() => {
-        // 取消操作
-      });
+        })
+        .catch(() => {
+          // 取消操作
+        })
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     },
     flushTable() {
-      this.$axios.post('/queryMessage', {})
-        .then(res => {
-          if (res.data.code == 1) {
-            this.tableData = res.data.data
-          }
-        })
+      this.$axios.post('/queryMessage', {}).then(res => {
+        if (res.data.code == 1) {
+          this.tableData = res.data.data
+        }
+      })
     },
     // 通过系别自动获取专业
     getChild(name) {
@@ -189,71 +192,63 @@ export default {
           class: ''
         }
         this.childList = []
-        this.$axios.post('/queryMessage', this.form)
-          .then(res => {
-            if (res.data.code == 1) {
-              this.tableData = res.data.data
-            }
-          })
+        this.$axios.post('/queryMessage', this.form).then(res => {
+          if (res.data.code == 1) {
+            this.tableData = res.data.data
+          }
+        })
       } else {
-        this.$axios.post('/queryMessage', this.form)
-          .then(res => {
-            if (res.data.code == 1) {
-              this.tableData = res.data.data
-              for (let i = 0; i < this.tableData.length; i++) {
-                for (let key in this.tableData[i]) {
-                  if (key == 'content') {
-                    let str = this.tableData[i][key]
-                    if (str != null) {
-                      this.tableData[i][key] = str.replace(badWords, function (s) {
-                        var str = "";
-                        for (var i = 0; i < s.length; i++) {
-                          str += "*";
-                        }
-                        return str;
-                      });
-                    }
-
+        this.$axios.post('/queryMessage', this.form).then(res => {
+          if (res.data.code == 1) {
+            this.tableData = res.data.data
+            for (let i = 0; i < this.tableData.length; i++) {
+              for (let key in this.tableData[i]) {
+                if (key == 'content') {
+                  let str = this.tableData[i][key]
+                  if (str != null) {
+                    this.tableData[i][key] = str.replace(badWords, function(s) {
+                      var str = ''
+                      for (var i = 0; i < s.length; i++) {
+                        str += '*'
+                      }
+                      return str
+                    })
                   }
                 }
               }
             }
-          })
+          }
+        })
       }
     }
-
   },
   created() {
-    this.$axios.post('/queryMessage', {})
-      .then(res => {
-        if (res.data.code == 1) {
-          this.tableData = res.data.data
-          for (let i = 0; i < this.tableData.length; i++) {
-            for (let key in this.tableData[i]) {
-              if (key == 'content') {
-                let str = this.tableData[i][key]
-                if (str != null) {
-                  this.tableData[i][key] = str.replace(badWords, function (s) {
-                    var str = "";
-                    for (var i = 0; i < s.length; i++) {
-                      str += "*";
-                    }
-                    return str;
-                  });
-                }
-
+    this.$axios.post('/queryMessage', {}).then(res => {
+      if (res.data.code == 1) {
+        this.tableData = res.data.data
+        for (let i = 0; i < this.tableData.length; i++) {
+          for (let key in this.tableData[i]) {
+            if (key == 'content') {
+              let str = this.tableData[i][key]
+              if (str != null) {
+                this.tableData[i][key] = str.replace(badWords, function(s) {
+                  var str = ''
+                  for (var i = 0; i < s.length; i++) {
+                    str += '*'
+                  }
+                  return str
+                })
               }
             }
           }
         }
-      })
+      }
+    })
   },
   mounted() {
     this.systemsList = sysList
   }
-
 }
-
 </script>
 <style scoped>
 .messages {

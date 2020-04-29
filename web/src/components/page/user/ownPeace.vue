@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { sysList } from '../../../mock/data/sysList'   // 系别库
+import { sysList } from '../../../mock/data/sysList' // 系别库
 export default {
   data() {
     return {
@@ -131,38 +131,38 @@ export default {
       }
     },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           this.ruleForm.root = 0
           this.ruleForm.userID = sessionStorage.getItem('userID')
           delete this.ruleForm.image
-          this.$axios.post('/updateStu', this.ruleForm)
-            .then(res => {
-              if (res.data.code == 1) {
-                this.$message({
-                  type: 'success',
-                  message: '修改成功！'
-                });
-                this.isEdit = false
-                this.isDisabled = true
 
-                for (let key in this.defaultForm) {
-                  for (let key2 in this.ruleForm) {
-                    if (key == key2) {
-                      console.log(this.defaultForm[key], this.ruleForm[key2])
-                      if (this.defaultForm[key] != this.ruleForm[key2]) {
-                        console.log(key, this.ruleForm[key2], 1111)
-                        sessionStorage.setItem(key, this.ruleForm[key2])
-                      }
+          this.$axios.post('/updateStu', this.ruleForm).then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                type: 'success',
+                message: '修改成功！'
+              })
+              this.isEdit = false
+              this.isDisabled = true
+
+              for (let key in this.defaultForm) {
+                for (let key2 in this.ruleForm) {
+                  if (key == key2) {
+                    console.log(this.defaultForm[key], this.ruleForm[key2])
+                    if (this.defaultForm[key] != this.ruleForm[key2]) {
+                      console.log(key, this.ruleForm[key2], 1111)
+                      sessionStorage.setItem(key, this.ruleForm[key2])
                     }
                   }
                 }
-              } else {
-                this.$message.error('修改失败！');
               }
-            })
+            } else {
+              this.$message.error('修改失败！')
+            }
+          })
         }
-      });
+      })
     },
     setDatas(newObj, oldObj) {
       for (let key in oldObj) {
@@ -194,7 +194,7 @@ export default {
           type: 'success',
           message: res.msg
         })
-        this.imageUrl = URL.createObjectURL(file.raw);
+        this.imageUrl = URL.createObjectURL(file.raw)
         if (this.imageUrl != sessionStorage.getItem('image')) {
           sessionStorage.setItem('image', this.imageUrl)
         }
@@ -203,16 +203,16 @@ export default {
       }
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+        this.$message.error('上传头像图片只能是 JPG 格式!')
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+        this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isJPG && isLt2M;
+      return isJPG && isLt2M
     }
   },
   created() {
@@ -262,7 +262,6 @@ export default {
     this.systemsList = sysList
   }
 }
-
 </script>
 <style scoped>
 .ownPeace {

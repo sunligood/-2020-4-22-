@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">XXXX校园通讯录</div>
+      <div class="ms-title">海滨学院校友录</div>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
         <el-form-item prop="username">
           <el-input v-model="ruleForm.username" placeholder="username">
@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  data: function () {
+  data: function() {
     return {
       ruleForm: {
         username: '',
@@ -38,36 +38,36 @@ export default {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
-        ]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
     }
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           let parms = {
             name: this.ruleForm.username,
             password: this.ruleForm.password
           }
-          this.$axios.post('/login', parms)
-            .then(res => {
-              if (res.data.code == 1) {
-                localStorage.setItem('ms_username', this.ruleForm.username);
-                if (this.ruleForm.username != 'admin') this.$router.push({ path: '/userClass', query: { userData: res.data.data } });
-                else this.$router.push({ path: '/allUser' });
-              } else {
-                this.$message.error(res.data.msg);
+          this.$axios.post('/login', parms).then(res => {
+            if (res.data.code == 1) {
+              localStorage.setItem('ms_username', this.ruleForm.username)
+              for (let key in res.data.data) {
+                sessionStorage.setItem(key, res.data.data[key])
               }
-            })
-
+              if (this.ruleForm.username != 'admin')
+                this.$router.push({ path: '/home' })
+              else this.$router.push({ path: '/allUser' })
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          })
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     }
   }
 }

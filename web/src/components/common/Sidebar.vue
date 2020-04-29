@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import bus from "../common/bus";
+import bus from '../common/bus'
 import { getSysmenu } from '../../api/api'
 export default {
   data() {
@@ -59,8 +59,8 @@ export default {
           title: '班级管理',
           subs: [
             {
-              index: "allUser",
-              title: "所有用户"
+              index: 'allUser',
+              title: '所有用户'
             },
             {
               index: 'addUsers',
@@ -75,7 +75,8 @@ export default {
               title: '消息管理'
             }
           ]
-        }],
+        }
+      ],
       userItems: [
         {
           icon: 'el-icon-lx-cascades',
@@ -83,12 +84,12 @@ export default {
           title: '班级',
           subs: [
             {
-              index: 'leavingMsg',
-              title: '班级留言'
-            },
-            {
               index: 'classCommunication',
               title: '班级通讯'
+            },
+            {
+              index: 'leavingMsg',
+              title: '班级留言'
             },
             {
               index: 'classPicture',
@@ -112,52 +113,50 @@ export default {
           ]
         }
       ]
-    };
+    }
   },
   methods: {
-    isAdmin(userName) {
-
-    },
+    isAdmin(userName) {},
     getMenuData(menuName) {
-      let menuData = [];
+      let menuData = []
       getSysmenu().then(
-        function (data) {
-          let data1 = data.data.menuArr;
+        function(data) {
+          let data1 = data.data.menuArr
           data1.forEach((val, index) => {
-            let i = 8;
+            let i = 8
             if (val.menuname == menuName) {
-              let systemItem = {};
-              systemItem.icon = "el-icon-setting";
-              systemItem.idex = i;
-              systemItem.title = val.menuname;
-              systemItem.subs = [];
+              let systemItem = {}
+              systemItem.icon = 'el-icon-setting'
+              systemItem.idex = i
+              systemItem.title = val.menuname
+              systemItem.subs = []
               data1.forEach(value => {
                 if (value.parentid == val.id) {
-                  let systemSubs = {};
-                  let menuurl = value.menuurl.split('/')[2];
-                  systemSubs.index = menuurl;
-                  systemSubs.title = value.menuname;
-                  systemItem.subs.push(systemSubs);
+                  let systemSubs = {}
+                  let menuurl = value.menuurl.split('/')[2]
+                  systemSubs.index = menuurl
+                  systemSubs.title = value.menuname
+                  systemItem.subs.push(systemSubs)
                 }
-              });
-              this.items.push(systemItem);
+              })
+              this.items.push(systemItem)
             }
-            i++;
-          });
+            i++
+          })
         }.bind(this)
-      );
+      )
     }
   },
   computed: {
     onRoutes() {
-      return this.$route.path.replace("/", "");
+      return this.$route.path.replace('/', '')
     }
   },
   created() {
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-    bus.$on("collapse", msg => {
-      this.collapse = msg;
-    });
+    bus.$on('collapse', msg => {
+      this.collapse = msg
+    })
 
     // 管理者与用户显示不痛菜单
     var userName = localStorage.getItem('ms_username')
@@ -165,8 +164,7 @@ export default {
       this.items = this.userItems
       this.defaultActive = ''
       this.defaultOpeneds = ['userClass', 'userInfo']
-    }
-    else {
+    } else {
       this.items = this.adminItems
       this.defaultActive = 'allUser'
       this.defaultOpeneds = ['classAdmin']
@@ -174,10 +172,8 @@ export default {
 
     // 获取query
     this.defaultActive = this.$route.path.split('/')[1]
-
-
   }
-};
+}
 </script>
 
 <style scoped>

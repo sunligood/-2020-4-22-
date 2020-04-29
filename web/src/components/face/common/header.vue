@@ -1,51 +1,30 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="logoImg">LOGO</div>
-    <div class="logo">XXXXX校友通讯录</div>
+    <div class="logoImg">
+      <img src="../../../assets/img/logo.jpg" alt />
+    </div>
+    <div class="logo">海滨学院校友录</div>
     <div class="header-nav">
       <ul>
-        <li>首页</li>
-        <li>班级相册</li>
-        <li>通讯录</li>
-        <li>关于学校</li>
+        <li @click="goUrl('/home')">首页</li>
+        <li @click="goUrl('/postsList')">新闻动态</li>
+        <li @click="goUrl('/about')">关于学校</li>
       </ul>
     </div>
     <div class="header-right">
-      <div class="header-user-con" :class="{fnHide: isLogin}">
+      <div class="header-user-con" v-if="!username">
         <a href="javascript: void(0)" class="loginBtn" @click="toLogin()">登录</a>
       </div>
-      <div class="header-user-con" :class="{fnHide: !isLogin}">
-        <!-- 全屏显示 -->
-        <!-- <div class="btn-fullscreen" @click="handleFullScreen">
-          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-            <i class="el-icon-rank"></i>
-          </el-tooltip>
-        </div>-->
-        <!-- 消息中心 -->
-        <!-- <div class="btn-bell">
-          <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-            <router-link to="/tabs">
-              <i class="el-icon-bell"></i>
-            </router-link>
-          </el-tooltip>
-          <span class="btn-bell-badge" v-if="message"></span>
-        </div>-->
-        <!-- 用户头像 -->
-        <div class="user-avator">
-          <img src="../../../assets/img/img.jpg" />
-        </div>
+      <div class="header-user-con" v-else :class="{fnHide: !username}">
         <!-- 用户名下拉菜单 -->
-        <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+        <el-dropdown class="user-name" trigger="click" @command="handleCommand" v-if="username">
           <span class="el-dropdown-link">
             {{username}}
             <i class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <router-link to="/admin">
-              <el-dropdown-item>用户信息</el-dropdown-item>
-            </router-link>
-            <el-dropdown-item command="user">修改密码</el-dropdown-item>
+            <el-dropdown-item command="user">{{root == 1 ? '班级管理' : '班级中心'}}</el-dropdown-item>
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -54,87 +33,47 @@
   </div>
 </template>
 <script>
-import bus from "../../common/bus";
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
 export default {
   data() {
     return {
       collapse: false,
       fullscreen: false,
-      name: "linxin",
-      message: 2,
-      isLogin: false
-    };
+      name: '',
+      message: 2
+    }
   },
   computed: {
     username() {
-      let username = localStorage.getItem("ms_username");
-      return username ? username : this.name;
+      let username = sessionStorage.getItem('name')
+      return username ? username : this.name
     },
-    ...mapGetters('dailog', {
-      isShow: 'isShow'
-    })
+    root() {
+      let root = sessionStorage.getItem('root')
+      return root === undefined ? 0 : root
+    }
   },
   methods: {
     // 用户名下拉菜单选择事件
     handleCommand(command) {
-      if (command == "loginout") {
-        localStorage.removeItem("ms_username");
-        this.$router.push("/login");
-      } else if (command == "user") {
-        this.$store.dispatch('dailog/showDailog')
+      if (command == 'loginout') {
+        localStorage.removeItem('ms_username')
+        sessionStorage.removeItem('name')
+        this.$router.push('/login')
+      } else if (command == 'user') {
+        // 后台
+        // if (this.root != 1) this.$router.push({ path: '/userClass' })
+        if (this.root != 1) this.$router.push({ path: '/classCommunication' })
+        else this.$router.push({ path: '/allUser' })
       }
-    },
-    ...mapActions('dailog', [
-      'hideDailog',
-      'showDailog'
-    ]),
-    // 侧边栏折叠
-    collapseChage() {
-      this.collapse = !this.collapse;
-      bus.$emit("collapse", this.collapse);
-    },
-    // 全屏事件
-    handleFullScreen() {
-      let element = document.documentElement;
-      if (this.fullscreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        }
-      } else {
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen();
-        } else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if (element.msRequestFullscreen) {
-          // IE11
-          element.msRequestFullscreen();
-        }
-      }
-      this.fullscreen = !this.fullscreen;
-    },
-    showDailog1() {
-      alert(12);
     },
     toLogin() {
       this.$router.push({ path: '/login' })
-    }
-  },
-  mounted() {
-    if (document.body.clientWidth < 1500) {
-      this.collapseChage();
+    },
+    goUrl(url) {
+      this.$router.push({ path: url })
     }
   }
-};
+}
 </script>
 <style scoped>
 .header {
@@ -149,8 +88,11 @@ export default {
 .logoImg {
   float: left;
   padding: 0 21px;
-  cursor: pointer;
   line-height: 70px;
+}
+.logoImg img {
+  width: 50px;
+  vertical-align: middle;
 }
 .header .logo {
   float: left;
@@ -240,8 +182,5 @@ export default {
   background-color: #fff;
   color: #0577c0;
   font-size: 15px;
-}
-.fnHide {
-  display: none;
 }
 </style>

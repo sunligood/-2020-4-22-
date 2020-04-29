@@ -25,7 +25,7 @@
         </el-table>
       </div>
       <div class="page">
-        <el-pagination
+        <!-- <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage4"
@@ -33,7 +33,7 @@
           :page-size="10"
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableData.length"
-        ></el-pagination>
+        ></el-pagination>-->
       </div>
     </div>
   </div>
@@ -57,49 +57,30 @@ export default {
   },
   methods: {
     indexMethod(index) {
-      return index++;
+      return index++
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      console.log(index, row)
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     }
   },
   created() {
-    let data = this.$route.query.userData
-    sessionStorage.setItem('systems', data.systems)
-    sessionStorage.setItem('major', data.major)
-    sessionStorage.setItem('class', data.class)
-    sessionStorage.setItem('address', data.address)
-    sessionStorage.setItem('email', data.email)
-    sessionStorage.setItem('emp_no', data.emp_no)
-    sessionStorage.setItem('explains', data.explains)
-    sessionStorage.setItem('image', data.image)
-    sessionStorage.setItem('hobby', data.hobby)
-    sessionStorage.setItem('mobile', data.mobile)
-    sessionStorage.setItem('name', data.name)
-    sessionStorage.setItem('userID', data.userID)
-    sessionStorage.setItem('sex', data.sex)
-    sessionStorage.setItem('password', data.password)
-
     let parms = {
-      systems: data.systems,
-      major: data.major,
-      class: data.class
+      systems: sessionStorage.getItem('systems'),
+      major: sessionStorage.getItem('major'),
+      class: sessionStorage.getItem('class')
     }
-    this.$axios.post('/queryStu', parms)
-      .then(res => {
-        this.tableData = res.data.data
-      })
+    this.$axios.post('/queryStu', parms).then(res => {
+      this.tableData = res.data.data
+    })
   }
-
 }
-
 </script>
 <style scoped>
 .main {
