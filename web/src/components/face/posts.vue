@@ -17,6 +17,9 @@
           </p>
         </div>
         <div style="height:1px;border-bottom:1px solid #f2f2f2;margin: 38px auto;"></div>
+        <div style="text-align: center;">
+          <img :src="posts.image" alt width="500px" />
+        </div>
         <p class="contents" v-for="(item,index) in posts.content" :key="index">{{item}}</p>
       </div>
     </div>

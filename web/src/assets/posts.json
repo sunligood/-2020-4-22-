@@ -11,7 +11,7 @@
   },
   {
     "title": "这是一篇文章的标题2",
-    "image": "/logo.png",
+    "image": "/timg1.jpg",
     "content": [
       "这是第一段",
       "这是第二段"
@@ -21,7 +21,7 @@
   },
   {
     "title": "这是一篇文章的标题3",
-    "image": "/logo.png",
+    "image": "/timg2.jpg",
     "content": [
       "这是第一段",
       "这是第二段"

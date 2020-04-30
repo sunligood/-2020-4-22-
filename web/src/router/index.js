@@ -90,15 +90,18 @@ export default new Router({
         },
         {
             path: '/posts',
-            component: Posts
+            component: Posts,
+            meta: { title: '首页' }
         },
         {
             path: '/postsList',
-            component: PostsList
+            component: PostsList,
+            meta: { title: '首页' }
         },
         {
             path: '/about',
-            component: About
+            component: About,
+            meta: { title: '首页' }
         },
     ]
 })
