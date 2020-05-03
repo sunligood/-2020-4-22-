@@ -18,6 +18,10 @@
           ></el-image>-->
         </div>
         <div class="words">
+          <span>发布时间：</span>
+          <span>{{item.createdDate}}</span>
+        </div>
+        <div class="words">
           <span>发布人：</span>
           <span>{{item.author}}</span>
         </div>
@@ -27,12 +31,7 @@
       <el-button type="primary" @click="showImgBox()">上传图片</el-button>
     </div>
 
-    <el-dialog
-      title="上传图片"
-      :visible.sync="imgBoxShow"
-      :show-close="showClose = false"
-      :close-on-click-modal="close=false"
-    >
+    <el-dialog title="上传图片" :visible.sync="imgBoxShow" :close-on-click-modal="close=false">
       <el-upload class="upload-demo" drag action="/addClassAlbum" multiple :data="uploadImgData">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">

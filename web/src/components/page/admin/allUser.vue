@@ -1,5 +1,33 @@
 <template>
   <div class="allUser">
+    <div class="searchBox">
+      <div class="inputBox">
+        <el-select v-model="form.systems" placeholder="请选择系别" @change="getChild(form.systems)">
+          <el-option
+            v-for="obj in  systemsList"
+            :key="obj.code"
+            :label="obj.name"
+            :value="obj.name"
+          ></el-option>
+        </el-select>
+      </div>
+      <div class="inputBox">
+        <el-select v-model="form.major" placeholder="请选择专业">
+          <el-option
+            v-for="item in childList"
+            :key="item.code"
+            :label="item.name"
+            :value="item.name"
+          ></el-option>
+        </el-select>
+      </div>
+      <div class="inputBox">
+        <el-input v-model="form.class" placeholder="请输入班级"></el-input>
+      </div>
+
+      <el-button type="primary" @click="searchFn('search')">查询</el-button>
+      <el-button type="primary" @click="searchFn('return')">重置</el-button>
+    </div>
     <div class="tableBox">
       <el-table
         :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
@@ -26,9 +54,9 @@
       <!-- <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
+        :current-page="currentPage"
         :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
       ></el-pagination>-->
@@ -43,7 +71,8 @@
           <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="性别">
-          <el-input v-model="form.sex" placeholder="请输入性别"></el-input>
+          <el-radio v-model="form.sex" label="男">男</el-radio>
+          <el-radio v-model="form.sex" label="女">女</el-radio>
         </el-form-item>
         <el-form-item label="系别">
           <el-select v-model="form.systems" placeholder="请选择系别" @change="getChild(form.systems)">
@@ -93,11 +122,13 @@ export default {
     return {
       search: '',
       tableData: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
-      form: {},
+      currentPage: 1,
+      pageSize: 10,
+      form: {
+        systems: '',
+        class: '',
+        major: ''
+      },
       dialogFormVisible: false,
       systemsList: [],
       childList: []
@@ -210,7 +241,7 @@ export default {
     // 通过系别自动获取专业
     getChild(name) {
       let parentName = name
-      this.ruleForm.major = ''
+      this.tableData.major = ''
       for (let i = 0; i < this.systemsList.length; i++) {
         for (let key in this.systemsList[i]) {
           if (this.systemsList[i]['name'] == parentName) {
@@ -218,6 +249,47 @@ export default {
             return false
           }
         }
+      }
+    },
+    searchFn(type) {
+      if (type == 'return') {
+        // 重置
+        this.form = {
+          systems: '',
+          major: '',
+          class: ''
+        }
+        this.childList = []
+        this.$axios.post('/queryStu', this.form)
+          .then(res => {
+            if (res.data.code == 1) {
+              this.tableData = res.data.data
+            }
+          })
+      } else {
+        this.$axios.post('/queryStu', this.form)
+          .then(res => {
+            if (res.data.code == 1) {
+              this.tableData = res.data.data
+              for (let i = 0; i < this.tableData.length; i++) {
+                for (let key in this.tableData[i]) {
+                  if (key == 'content') {
+                    let str = this.tableData[i][key]
+                    if (str != null) {
+                      this.tableData[i][key] = str.replace(badWords, function (s) {
+                        var str = "";
+                        for (var i = 0; i < s.length; i++) {
+                          str += "*";
+                        }
+                        return str;
+                      });
+                    }
+
+                  }
+                }
+              }
+            }
+          })
       }
     }
   },
@@ -240,5 +312,13 @@ export default {
   background-color: #fff;
   margin-top: 20px;
   text-align: right;
+}
+.searchBox {
+  padding-bottom: 20px;
+}
+.inputBox {
+  width: 200px;
+  display: inline-block;
+  margin-right: 20px;
 }
 </style>

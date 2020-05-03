@@ -41,20 +41,20 @@
     <div class="formBox">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="学号" prop="studentNo">
-          <el-input v-model="ruleForm.emp_no" :disabled="isDisabled" placeholder="请输入学号"></el-input>
+          <el-input v-model="ruleForm.emp_no" :disabled="disabledTrue" placeholder="请输入学号"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="ruleForm.name" :disabled="isDisabled" placeholder="请输入姓名"></el-input>
+          <el-input v-model="ruleForm.name" :disabled="disabledTrue" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-          <el-input v-model="ruleForm.sex" :disabled="isDisabled" placeholder="请输入性别"></el-input>
+          <el-input v-model="ruleForm.sex" :disabled="disabledTrue" placeholder="请输入性别"></el-input>
         </el-form-item>
         <el-form-item label="系别" prop="systems">
           <el-select
             v-model="ruleForm.systems"
             placeholder="请选择系别"
             @change="getChild(ruleForm.systems)"
-            :disabled="isDisabled"
+            :disabled="disabledTrue"
           >
             <el-option
               v-for="obj in  systemsList"
@@ -64,8 +64,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="专业" prop="major" :disabled="isDisabled">
-          <el-select v-model="ruleForm.major" placeholder="请选择专业" :disabled="isDisabled">
+        <el-form-item label="专业" prop="major" :disabled="disabledTrue">
+          <el-select v-model="ruleForm.major" placeholder="请选择专业" :disabled="disabledTrue">
             <el-option
               v-for="item in childList"
               :key="item.code"
@@ -75,7 +75,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="班级" prop="class">
-          <el-input v-model="ruleForm.class" placeholder="请输入班级" :disabled="isDisabled"></el-input>
+          <el-input v-model="ruleForm.class" placeholder="请输入班级" :disabled="disabledTrue"></el-input>
         </el-form-item>
         <el-form-item label="电话" prop="mobile">
           <el-input v-model="ruleForm.mobile" :disabled="isDisabled" placeholder="请输入电话"></el-input>
@@ -90,7 +90,12 @@
           <el-input v-model="ruleForm.hobby" :disabled="isDisabled" placeholder="请输入爱好"></el-input>
         </el-form-item>
         <el-form-item label="个人说明" prop="explains">
-          <el-input v-model="ruleForm.explains" :disabled="isDisabled" placeholder="请输入个人说明"></el-input>
+          <el-input
+            type="textarea"
+            v-model="ruleForm.explains"
+            :disabled="isDisabled"
+            placeholder="请输入个人说明"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-show="!isEdit" @click="changStatus('edit')">编辑个人信息</el-button>
@@ -110,6 +115,7 @@ export default {
       ruleForm: {},
       defaultForm: {},
       isDisabled: true,
+      disabledTrue: true,
       isEdit: false,
       systemsList: [],
       childList: [],

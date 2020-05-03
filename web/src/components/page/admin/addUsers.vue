@@ -15,7 +15,8 @@
           <el-input v-model="ruleForm.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-          <el-input v-model="ruleForm.sex" placeholder="请输入性别"></el-input>
+          <el-radio v-model="ruleForm.sex" label="男" checked>男</el-radio>
+          <el-radio v-model="ruleForm.sex" label="女">女</el-radio>
         </el-form-item>
         <el-form-item label="系别" prop="systems">
           <el-select
@@ -72,7 +73,7 @@ export default {
       ruleForm: {
         emp_no: '',
         name: '',
-        sex: '',
+        sex: '男',
         systems: '',
         major: '',
         class: '',
