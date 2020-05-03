@@ -11,14 +11,24 @@
       </el-carousel>
     </div>
     <div class="news-box">
-      <div class="news-title">新闻栏</div>
+      <div class="news-title">
+        <span>新闻</span>
+        <span class="more">更多</span>
+      </div>
       <div class="news-body">
-        <div class="news-item" v-for="(item, index) in newsList" :key="index">
-          <span class="words">
-            <span class="index">{{index + 1}}</span>
-            .{{item.content}}
-          </span>
-          <span class="time">{{item.time}}</span>
+        <div
+          class="news-item"
+          v-for="(item, index) in newsList"
+          :key="index"
+          @click="goPosts(index)"
+        >
+          <div style="padding: 0 20px">
+            <img :src="item.image" width="100%" height="250px" />
+          </div>
+          <div style="padding: 0 20px">
+            <p class="words title">{{item.title}}</p>
+            <p class="wordsTow contents">{{contents(item.content)}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -26,7 +36,8 @@
 </template>
 
 <script>
-import vHead from "@/components/face/common/header";
+import vHead from '@/components/face/common/header'
+import Posts from '@/assets/posts.json'
 import banner1 from '@/assets/img/banner/banner1.jpg'
 import banner2 from '@/assets/img/banner/banner2.jpg'
 import banner3 from '@/assets/img/banner/banner3.jpg'
@@ -37,29 +48,26 @@ export default {
   data() {
     return {
       bannerData: [banner1, banner2, banner3],
-      newsList: [
-        {
-          content: '这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容',
-          time: '2020年4月23日12:29:12'
-        },
-        {
-          content: '这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容',
-          time: '2020年4月23日12:29:12'
-        },
-        {
-          content: '这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容',
-          time: '2020年4月23日12:29:12'
-        },
-        {
-          content: '这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容',
-          time: '2020年4月23日12:29:12'
-        }
-      ]
+      newsList: Posts
+    }
+  },
+  methods: {
+    // 跳转文章详情
+    goPosts(index) {
+      this.$router.push({
+        path: '/posts',
+        query: { index: index, type: 'home' }
+      })
+    },
+    contents(content) {
+      let str = ''
+      content.forEach(item => {
+        str += item
+      })
+      return str
     }
   }
-
 }
-
 </script>
 <style scoped>
 /* banner css */
@@ -99,33 +107,58 @@ export default {
   padding: 0 20px;
   margin: 0 auto;
 }
-.news-box .news-title {
-  color: #000;
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.news-body {
+  display: flex;
+  flex-wrap: wrap;
 }
-.news-box .news-item {
+.news-box .news-title {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  color: #000;
+  font-size: 25px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #dcdfe6;
+}
+.news-title .more {
+  font-size: 12px;
   cursor: pointer;
-  font-size: 18px;
+}
+.news-box .news-item {
+  width: 50%;
+  /* display: flex;
+  justify-content: space-between; */
+  cursor: pointer;
+  font-size: 16px;
   margin: 20px 0;
 }
 .news-box .news-item .words {
-  width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.news-box .news-item .time {
-  color: #a1a1a1;
+.news-box .news-item .wordsTow {
+  height: 35px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
-.news-box .news-item .words .index {
-  font-size: 18px;
+.news-box .news-item .title {
+  font-size: 16px;
   font-weight: bold;
 }
-.news-box .news-item:hover {
+.news-box .news-item .contents {
+  padding-top: 10px;
+  color: #a1a1a1;
+  font-size: 12px;
+}
+.news-box .news-item:hover,
+.more:hover {
   color: blue !important;
 }
 </style>

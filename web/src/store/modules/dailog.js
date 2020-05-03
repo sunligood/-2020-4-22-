@@ -1,29 +1,29 @@
-const state={
-    showUser:false
+const state = {
+    showUser: false
 };
-const getters={
-    isShow(state){
-       return state.showUser;
+const getters = {
+    isShow(state) {
+        return state.showUser;
     }
 }
-const mutations={
-    hide(state){
-        state.showUser=false;
+const mutations = {
+    hide(state) {
+        state.showUser = false;
     },
-    show(state){
-        state.showUser=true;
+    show(state) {
+        state.showUser = true;
     }
 }
-const actions={
-    showDailog({commit}){
+const actions = {
+    showDailog({ commit }) {
         commit('show');
     },
-    hideDailog({commit}){
+    hideDailog({ commit }) {
         commit('hide');
     }
 }
-export default{
-    namespaced:true,
+export default {
+    namespaced: true,
     getters,
     mutations,
     actions,

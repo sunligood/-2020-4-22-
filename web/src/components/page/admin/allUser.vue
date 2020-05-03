@@ -51,7 +51,7 @@
       </el-table>
     </div>
     <div class="page">
-      <el-pagination
+      <!-- <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
@@ -59,10 +59,10 @@
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
-      ></el-pagination>
+      ></el-pagination>-->
     </div>
 
-    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+    <el-dialog title="编辑" :visible.sync="dialogFormVisible">
       <el-form :model="form" label-width="100px" class="demo-ruleForm">
         <el-form-item label="学号">
           <el-input v-model="form.emp_no" placeholder="请输入学号"></el-input>
@@ -131,12 +131,12 @@ export default {
       },
       dialogFormVisible: false,
       systemsList: [],
-      childList: [],
+      childList: []
     }
   },
   methods: {
     indexMethod(index) {
-      return index++;
+      return index++
     },
     // 编辑按钮
     handleEdit(index, row) {
@@ -155,18 +155,17 @@ export default {
     },
     // 编辑保存
     changeUserInfo() {
-      this.$axios.post('/updateStu', this.form)
-        .then(res => {
-          if (res.data.code == 1) {
-            this.$message({
-              message: '修改成功！',
-              type: 'success'
-            });
-            this.dialogFormVisible = false
-          } else {
-            this.$message.error('修改失败！')
-          }
-        })
+      this.$axios.post('/updateStu', this.form).then(res => {
+        if (res.data.code == 1) {
+          this.$message({
+            message: '修改成功！',
+            type: 'success'
+          })
+          this.dialogFormVisible = false
+        } else {
+          this.$message.error('修改失败！')
+        }
+      })
     },
     // 删除
     handleDelete(index, row) {
@@ -174,38 +173,70 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        // 确定操作
-        var parms = {
-          userID: row.userID
-        }
-        this.$axios.post('/deleteStu', parms)
-          .then(res => {
+      })
+        .then(() => {
+          // 确定操作
+          var parms = {
+            userID: row.userID
+          }
+          this.$axios.post('/deleteStu', parms).then(res => {
             if (res.data.code == 1) {
               this.$message({
                 type: 'success',
                 message: '删除成功！'
-              });
+              })
 
               this.flushTable()
             }
           })
-      }).catch(() => {
-        // 取消操作
-      });
+        })
+        .catch(() => {
+          // 取消操作
+        })
+    },
+    //批量删除
+    deleteMore() {
+      let getListArr = this.$refs.multipleTable.selection
+      let idArr = []
+      for (let i = 0; i < getListArr.length; i++) {
+        for (let key in getListArr[i]) {
+          if (key == 'imgID') {
+            idArr.push(getListArr[i][key])
+          }
+        }
+      }
+      this.$confirm('确定删除这些用户？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // 确定操作
+          this.$axios.post('/deleteClassAlbum', { imgID: idArr }).then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                type: 'success',
+                message: res.data.msg
+              })
+              this.flushTable()
+            }
+          })
+        })
+        .catch(() => {
+          // 取消操作
+        })
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     },
     flushTable() {
-      this.$axios.post('/queryStu')
-        .then(res => {
-          this.tableData = res.data.data
-        })
+      this.$axios.post('/queryStu').then(res => {
+        this.tableData = res.data.data
+      })
     },
     // 通过系别自动获取专业
     getChild(name) {
@@ -261,20 +292,16 @@ export default {
           })
       }
     }
-
   },
   created() {
-    this.$axios.post('/queryStu')
-      .then(res => {
-        this.tableData = res.data.data
-      })
+    this.$axios.post('/queryStu').then(res => {
+      this.tableData = res.data.data
+    })
   },
   mounted() {
     this.systemsList = sysList
   }
-
 }
-
 </script>
 <style scoped>
 .allUser {

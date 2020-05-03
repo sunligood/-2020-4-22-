@@ -23,7 +23,7 @@
         </el-table>
       </div>
       <div class="page">
-        <el-pagination
+        <!-- <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
@@ -31,7 +31,7 @@
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="tableData.length"
-        ></el-pagination>
+        ></el-pagination>-->
       </div>
     </div>
     <div class="btnBox">
@@ -57,42 +57,54 @@ export default {
   },
   methods: {
     indexMethod(index) {
-      return index++;
+      return index++
     },
     handleEdit(index, row) {
-      console.log(index, row);
+      console.log(index, row)
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      console.log(`当前页: ${val}`)
     },
-    getTime() {     	//获取时间
-      let date = new Date();
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      let day = date.getDate();
-      let hour = date.getHours();
-      let minute = date.getMinutes();
-      let second = date.getSeconds();
+    getTime() {
+      //获取时间
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth()
+      let day = date.getDate()
+      let hour = date.getHours()
+      let minute = date.getMinutes()
+      let second = date.getSeconds()
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
       if (day < 10) {
-        day = '0' + day;
+        day = '0' + day
       }
       if (hour < 10) {
-        hour = '0' + hour;
+        hour = '0' + hour
       }
       if (minute < 10) {
-        minute = '0' + minute;
+        minute = '0' + minute
       }
       if (second < 10) {
-        second = '0' + second;
+        second = '0' + second
       }
-      let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      let time =
+        year +
+        '-' +
+        month +
+        '-' +
+        day +
+        ' ' +
+        hour +
+        ':' +
+        minute +
+        ':' +
+        second
       return time
     },
     // 提交留言
@@ -102,7 +114,6 @@ export default {
         cancelButtonText: '取消',
         roundButton: true
       }).then(({ value }) => {
-
         let parms = {
           content: value,
           author: sessionStorage.getItem('name'),
@@ -115,42 +126,41 @@ export default {
           mobile: sessionStorage.getItem('mobile')
         }
 
-        this.$axios.post('/addMessage', parms)
-          .then(res => {
-            if (res.data.code == 1) {
-              this.$message({
-                type: 'success',
-                message: '新增成功！'
-              });
+        this.$axios.post('/addMessage', parms).then(res => {
+          if (res.data.code == 1) {
+            this.$message({
+              type: 'success',
+              message: '新增成功！'
+            })
 
-              let req = {
-                systems: sessionStorage.getItem('systems'),
-                major: sessionStorage.getItem('major'),
-                class: sessionStorage.getItem('class'),
-              }
-              this.$axios.post('/queryMessage', req)
-                .then(res => {
-                  this.tableData = res.data.data
-                  for (let i = 0; i < this.tableData.length; i++) {
-                    for (let key in this.tableData[i]) {
-                      if (key == 'content') {
-                        let str = this.tableData[i][key]
-                        if (str != null) {
-                          this.tableData[i][key] = str.replace(badWords, function (s) {
-                            var str = "";
-                            for (var i = 0; i < s.length; i++) {
-                              str += "*";
-                            }
-                            return str;
-                          });
+            let req = {
+              systems: sessionStorage.getItem('systems'),
+              major: sessionStorage.getItem('major'),
+              class: sessionStorage.getItem('class')
+            }
+            this.$axios.post('/queryMessage', req).then(res => {
+              this.tableData = res.data.data
+              for (let i = 0; i < this.tableData.length; i++) {
+                for (let key in this.tableData[i]) {
+                  if (key == 'content') {
+                    let str = this.tableData[i][key]
+                    if (str != null) {
+                      this.tableData[i][key] = str.replace(badWords, function(
+                        s
+                      ) {
+                        var str = ''
+                        for (var i = 0; i < s.length; i++) {
+                          str += '*'
                         }
-
-                      }
+                        return str
+                      })
                     }
                   }
-                })
-            }
-          })
+                }
+              }
+            })
+          }
+        })
       })
     }
   },
@@ -158,33 +168,29 @@ export default {
     let parms = {
       systems: sessionStorage.getItem('systems'),
       major: sessionStorage.getItem('major'),
-      class: sessionStorage.getItem('class'),
+      class: sessionStorage.getItem('class')
     }
-    this.$axios.post('/queryMessage', parms)
-      .then(res => {
-        this.tableData = res.data.data
-        for (let i = 0; i < this.tableData.length; i++) {
-          for (let key in this.tableData[i]) {
-            if (key == 'content') {
-              let str = this.tableData[i][key]
-              if (str != null) {
-                this.tableData[i][key] = str.replace(badWords, function (s) {
-                  var str = "";
-                  for (var i = 0; i < s.length; i++) {
-                    str += "*";
-                  }
-                  return str;
-                });
-              }
-
+    this.$axios.post('/queryMessage', parms).then(res => {
+      this.tableData = res.data.data
+      for (let i = 0; i < this.tableData.length; i++) {
+        for (let key in this.tableData[i]) {
+          if (key == 'content') {
+            let str = this.tableData[i][key]
+            if (str != null) {
+              this.tableData[i][key] = str.replace(badWords, function(s) {
+                var str = ''
+                for (var i = 0; i < s.length; i++) {
+                  str += '*'
+                }
+                return str
+              })
             }
           }
         }
-      })
+      }
+    })
   }
-
 }
-
 </script>
 <style scoped>
 .main {
