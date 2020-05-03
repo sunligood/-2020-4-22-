@@ -54,9 +54,9 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
+        :current-page="currentPage"
         :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length"
       ></el-pagination>
@@ -122,10 +122,8 @@ export default {
     return {
       search: '',
       tableData: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4,
+      currentPage: 1,
+      pageSize: 10,
       form: {
         systems: '',
         class: '',
