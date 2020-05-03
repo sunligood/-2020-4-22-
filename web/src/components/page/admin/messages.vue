@@ -32,6 +32,7 @@
       <el-table
         :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
         style="width: 100%"
+        ref="multipleTable"
       >
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="序号" width="50" type="index" :index="indexMethod(1)"></el-table-column>
@@ -54,7 +55,7 @@
     </div>
     <div class="fotter">
       <div class="btnBox">
-        <el-button type="primary">批量删除</el-button>
+        <el-button type="primary" @click="deleteMore()">批量删除</el-button>
       </div>
       <div class="pageBox">
         <el-pagination
@@ -132,6 +133,7 @@ export default {
           }
         }
       }
+      console.log(idArr)
       this.$confirm('确定删除这些用户？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

@@ -11,13 +11,13 @@
         </transition>
       </div>
     </div>
-    <el-dialog title="密码修改" :visible.sync="isShow" v-dialogDrag :before-close="handleClose">
+    <el-dialog title="密码修改" :visible.sync="isShow">
       <el-form :model="form">
         <el-form-item label="原密码" :label-width="formLabelWidth">
-          <el-input v-model="form.oldPassword" autocomplete="off"></el-input>
+          <el-input show-password v-model="form.oldPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="新密码" :label-width="formLabelWidth">
-          <el-input v-model="form.newPassword" autocomplete="off"></el-input>
+          <el-input show-password v-model="form.newPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" :label-width="formLabelWidth">
           <el-input show-password v-model="form.checkPassword" autocomplete="off"></el-input>
@@ -66,15 +66,24 @@ export default {
         .catch(_ => { });
     },
     changePwd() {
+      if (this.form.oldPassword != sessionStorage.getItem("password")) {
+        this.$message.error('旧密码错误！')
+        return false
+      }
+      if (this.form.newPassword == '') {
+        this.$message.error('请输入新密码！')
+        return false
+      }
+
+      if (this.form.checkPassword == '') {
+        this.$message.error('请确认新密码！')
+        return false
+      }
       if (this.form.newPassword != this.form.checkPassword) {
         this.$message.error('请确认密码是否一致！')
         return false
       }
 
-      if (this.form.oldPassword != sessionStorage.getItem("password")) {
-        this.$message.error('旧密码错误！')
-        return false
-      }
       let parms = {
         userID: sessionStorage.getItem("userID"),
         password: this.form.newPassword
@@ -86,7 +95,11 @@ export default {
               type: 'success',
               message: '修改成功！'
             })
-            this.isShow = false
+            this.hideDailog();
+
+            setTimeout(() => {
+              this.$router.push('/login')
+            }, 1500)
           } else {
             this.$message.error('修改失败！')
           }
