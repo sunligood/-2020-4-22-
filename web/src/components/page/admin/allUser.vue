@@ -27,13 +27,18 @@
 
       <el-button type="primary" @click="searchFn('search')">查询</el-button>
       <el-button type="primary" @click="searchFn('return')">重置</el-button>
+      <el-input
+        style="position: absolute;right: 59px;top: 33px;width: 200px;height:32px"
+        v-model="search"
+        placeholder="输入关键字搜索"
+      />
     </div>
     <div class="tableBox">
       <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
         style="width: 100%"
       >
-        <el-table-column align="center" label="序号" width="50" type="index" :index="indexMethod(1)"></el-table-column>
+        <el-table-column align="center" label="序号" width="50" type="index" :index="indexMethod(0)"></el-table-column>
         <el-table-column align="center" prop="name" label="姓名" width="80"></el-table-column>
         <el-table-column align="center" prop="systems" label="系别"></el-table-column>
         <el-table-column align="center" prop="major" label="专业"></el-table-column>
@@ -51,19 +56,25 @@
       </el-table>
     </div>
     <div class="page">
-      <!-- <el-pagination
+      <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10,20]"
         :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         :total="tableData.length"
-      ></el-pagination>-->
+      ></el-pagination>
     </div>
 
     <el-dialog title="编辑" :visible.sync="dialogFormVisible">
-      <el-form :model="form" label-width="100px" class="demo-ruleForm">
+      <el-form
+        :model="form"
+        ref="ruleForm"
+        :rules="rules"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="学号">
           <el-input v-model="form.emp_no" placeholder="请输入学号"></el-input>
         </el-form-item>
@@ -106,11 +117,11 @@
         <el-form-item label="现住地址">
           <el-input v-model="form.address" placeholder="请输入现住地址"></el-input>
         </el-form-item>
+        <el-form-item style="text-align:right">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="changeUserInfo('ruleForm')">确 定</el-button>
+        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="changeUserInfo()">确 定</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
@@ -122,6 +133,7 @@ export default {
     return {
       search: '',
       tableData: [],
+      tableDataDefault: [],
       currentPage: 1,
       pageSize: 10,
       form: {
@@ -131,12 +143,24 @@ export default {
       },
       dialogFormVisible: false,
       systemsList: [],
-      childList: []
+      childList: [],
+      rules: {
+        emp_no: [{ required: true, message: '请输入学号', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        sex: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        systems: [{ required: true, message: '请选择系别', trigger: 'change' }],
+        major: [{ required: true, message: '请选择专业', trigger: 'change' }],
+        class: [{ required: true, message: '请选择班级', trigger: 'change' }],
+        mobile: [{ required: true, message: '请输入电话', trigger: 'blur' }],
+        email: [{ required: true, message: '请输入email', trigger: 'blur' }],
+        address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
+      }
     }
   },
   methods: {
     indexMethod(index) {
-      return index++
+      index = index + 1 + (this.currentPage - 1) * this.pageSize
+      return index
     },
     // 编辑按钮
     handleEdit(index, row) {
@@ -154,16 +178,21 @@ export default {
       }
     },
     // 编辑保存
-    changeUserInfo() {
-      this.$axios.post('/updateStu', this.form).then(res => {
-        if (res.data.code == 1) {
-          this.$message({
-            message: '修改成功！',
-            type: 'success'
+    changeUserInfo(formName) {
+      this.$refs[formName].validate(valid => {
+        console.log(this.form)
+        if (valid) {
+          this.$axios.post('/updateStu', this.form).then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                message: '修改成功！',
+                type: 'success'
+              })
+              this.dialogFormVisible = false
+            } else {
+              this.$message.error('修改失败！')
+            }
           })
-          this.dialogFormVisible = false
-        } else {
-          this.$message.error('修改失败！')
         }
       })
     },
@@ -228,10 +257,10 @@ export default {
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage = val
     },
     flushTable() {
       this.$axios.post('/queryStu').then(res => {
@@ -252,6 +281,7 @@ export default {
       }
     },
     searchFn(type) {
+      this.currentPage = 1
       if (type == 'return') {
         // 重置
         this.form = {
@@ -260,46 +290,61 @@ export default {
           class: ''
         }
         this.childList = []
-        this.$axios.post('/queryStu', this.form)
-          .then(res => {
-            if (res.data.code == 1) {
-              this.tableData = res.data.data
-            }
-          })
+        this.$axios.post('/queryStu', this.form).then(res => {
+          if (res.data.code == 1) {
+            this.tableData = res.data.data
+          }
+        })
       } else {
-        this.$axios.post('/queryStu', this.form)
-          .then(res => {
-            if (res.data.code == 1) {
-              this.tableData = res.data.data
-              for (let i = 0; i < this.tableData.length; i++) {
-                for (let key in this.tableData[i]) {
-                  if (key == 'content') {
-                    let str = this.tableData[i][key]
-                    if (str != null) {
-                      this.tableData[i][key] = str.replace(badWords, function (s) {
-                        var str = "";
-                        for (var i = 0; i < s.length; i++) {
-                          str += "*";
-                        }
-                        return str;
-                      });
-                    }
-
+        this.$axios.post('/queryStu', this.form).then(res => {
+          if (res.data.code == 1) {
+            this.tableData = res.data.data
+            for (let i = 0; i < this.tableData.length; i++) {
+              for (let key in this.tableData[i]) {
+                if (key == 'content') {
+                  let str = this.tableData[i][key]
+                  if (str != null) {
+                    this.tableData[i][key] = str.replace(badWords, function(s) {
+                      var str = ''
+                      for (var i = 0; i < s.length; i++) {
+                        str += '*'
+                      }
+                      return str
+                    })
                   }
                 }
               }
             }
-          })
+          }
+        })
       }
     }
   },
   created() {
     this.$axios.post('/queryStu').then(res => {
       this.tableData = res.data.data
+      this.tableDataDefault = res.data.data
     })
   },
   mounted() {
     this.systemsList = sysList
+  },
+  watch: {
+    search(key) {
+      this.currentPage = 1
+      this.tableData = []
+      if (key == '') {
+        this.tableData = this.tableDataDefault
+        return
+      }
+      let newArr = []
+      this.tableDataDefault.forEach(item => {
+        if (JSON.stringify(item).indexOf(key) !== -1) {
+          newArr.push(item)
+        }
+      })
+      this.tableData = newArr
+    }
   }
 }
 </script>
@@ -317,7 +362,7 @@ export default {
   padding-bottom: 20px;
 }
 .inputBox {
-  width: 200px;
+  width: 170px;
   display: inline-block;
   margin-right: 20px;
 }

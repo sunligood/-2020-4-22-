@@ -2,24 +2,25 @@
   <div class="home">
     <v-head></v-head>
     <div class="banner">
-      <el-carousel :interval="5000" arrow="always" height="400px">
+      <el-carousel :interval="5000" arrow="always" height="500px">
         <el-carousel-item v-for="(item, index) in bannerData" :key="index">
-          <h3>
-            <img :src="item" alt />
-          </h3>
+          <img :src="item" width="100%" />
         </el-carousel-item>
       </el-carousel>
     </div>
     <div class="news-box">
       <div class="news-title">
         <span>新闻</span>
-        <span class="more">更多</span>
+        <span class="more">
+          <router-link to="/postsList">更多</router-link>
+        </span>
       </div>
       <div class="news-body">
         <div
           class="news-item"
           v-for="(item, index) in newsList"
           :key="index"
+          v-if="index<= 1"
           @click="goPosts(index)"
         >
           <div style="padding: 0 20px">
@@ -31,6 +32,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="footer">
+      <p class="title">本系统仅演示使用，侵权删</p>
     </div>
   </div>
 </template>
@@ -71,15 +75,7 @@ export default {
 </script>
 <style scoped>
 /* banner css */
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 18px;
-  opacity: 0.75;
-  line-height: 300px;
-  margin: 0;
-}
-/* banner css */
-.el-carousel__item h3 img {
+.el-carousel__item img {
   width: 100%;
   height: 100%;
 }
@@ -92,13 +88,9 @@ export default {
   background-color: #d3dce6;
 }
 
-/* main css */
-.home {
-}
 .banner {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 0 20px;
+  max-width: 1500px;
+  margin: 0 auto 20px auto;
 }
 
 .news-box {
@@ -157,8 +149,20 @@ export default {
   color: #a1a1a1;
   font-size: 12px;
 }
+.more a {
+  color: #a1a1a1;
+}
 .news-box .news-item:hover,
-.more:hover {
+.more a:hover {
   color: blue !important;
+}
+.footer {
+  background-color: #0577c0;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+}
+.footer .title {
+  padding: 30px 0;
 }
 </style>

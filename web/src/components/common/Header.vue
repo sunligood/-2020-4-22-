@@ -8,7 +8,7 @@
     <div class="header-right">
       <div class="header-user-con">
         <!-- 用户头像 -->
-        <div class="user-avator" v-show="userImg != 'null'">
+        <div class="user-avator" v-if="userImg != 'null'">
           <img :src="userImg" />
         </div>
         <!-- 用户名下拉菜单 -->
@@ -35,16 +35,14 @@ export default {
       collapse: false,
       fullscreen: false,
       name: 'linxin',
-      message: 2
+      message: 2,
+      userImg: 'null'
     }
   },
   computed: {
     username() {
       let username = localStorage.getItem('ms_username')
       return username ? username : this.name
-    },
-    userImg() {
-      return sessionStorage.getItem('image')
     }
   },
   methods: {
@@ -66,6 +64,14 @@ export default {
     }
   },
   mounted() {
+    let image = sessionStorage.getItem('image')
+    if (image) {
+      this.userImg = image
+    }
+    bus.$on('changeImg', url => {
+      console.log(url, 213123213)
+      this.userImg = url
+    })
     if (document.body.clientWidth < 1500) {
       this.collapseChage()
     }

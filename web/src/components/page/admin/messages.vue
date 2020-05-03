@@ -30,7 +30,7 @@
     </div>
     <div class="tableBox">
       <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
         style="width: 100%"
         ref="multipleTable"
       >
@@ -57,17 +57,17 @@
       <div class="btnBox">
         <el-button type="primary" @click="deleteMore()">批量删除</el-button>
       </div>
-      <!-- <div class="pageBox">
+      <div class="pageBox">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[10, 20]"
           :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next"
           :total="tableData.length"
         ></el-pagination>
-      </div>-->
+      </div>
     </div>
   </div>
 </template>
@@ -80,7 +80,7 @@ export default {
     return {
       search: '',
       tableData: [],
-      currentPage: 5,
+      currentPage: 1,
       pageSize: 10,
       systemsList: [],
       childList: [],
@@ -158,10 +158,10 @@ export default {
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage = val
     },
     flushTable() {
       this.$axios.post('/queryMessage', {}).then(res => {
@@ -184,6 +184,7 @@ export default {
       }
     },
     searchFn(type) {
+      this.currentPage = 1
       if (type == 'return') {
         // 重置
         this.form = {

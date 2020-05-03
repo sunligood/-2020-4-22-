@@ -18,10 +18,6 @@
                 <p class="content">{{item.content[0]}}</p>
                 <div class="bottom">
                   <p class="time">{{item.date}}</p>
-                  <p class="read">
-                    <i class="el-icon-view"></i>
-                    {{item.read}}
-                  </p>
                 </div>
               </div>
             </div>
@@ -123,8 +119,7 @@ export default {
               margin: 20px 0 40px 0;
             }
             .bottom {
-              display: flex;
-              justify-content: space-between;
+              text-align: right;
               color: #909399;
             }
           }

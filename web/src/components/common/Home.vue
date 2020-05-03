@@ -11,7 +11,7 @@
         </transition>
       </div>
     </div>
-    <el-dialog title="密码修改" :visible.sync="isShow">
+    <el-dialog title="密码修改" :visible.sync="isShow" :before-close="handleClose">
       <el-form :model="form">
         <el-form-item label="原密码" :label-width="formLabelWidth">
           <el-input show-password v-model="form.oldPassword" autocomplete="off"></el-input>
@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import vHead from "./Header.vue";
-import vSidebar from "./Sidebar.vue";
-import bus from "./bus";
-import { mapGetters } from "vuex";
-import { mapActions } from "vuex";
+import vHead from './Header.vue'
+import vSidebar from './Sidebar.vue'
+import bus from './bus'
+import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -48,25 +48,18 @@ export default {
         checkPassword: ''
       },
       formLabelWidth: '120px'
-    };
+    }
   },
   computed: {
-    ...mapGetters("dailog", {
-      isShow: "isShow"
-    })
+    ...mapGetters('dailog', ['isShow'])
   },
   methods: {
-    ...mapActions("dailog", ["hideDailog", "showDailog"]),
+    ...mapActions('dailog', ['hideDailog', 'showDailog']),
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.hideDailog();
-          //this.$store.dispatch('dailog/hideDailog')
-        }).bind(this)
-        .catch(_ => { });
+      this.hideDailog()
     },
     changePwd() {
-      if (this.form.oldPassword != sessionStorage.getItem("password")) {
+      if (this.form.oldPassword != sessionStorage.getItem('password')) {
         this.$message.error('旧密码错误！')
         return false
       }
@@ -83,27 +76,30 @@ export default {
         this.$message.error('请确认密码是否一致！')
         return false
       }
+      if (this.form.newPassword == this.form.oldPassword) {
+        this.$message.error('新密码不能与旧密码相同')
+        return false
+      }
 
       let parms = {
-        userID: sessionStorage.getItem("userID"),
+        userID: sessionStorage.getItem('userID'),
         password: this.form.newPassword
       }
-      this.$axios.post('/updateStu', parms)
-        .then(res => {
-          if (res.data.code == 1) {
-            this.$message({
-              type: 'success',
-              message: '修改成功！'
-            })
-            this.hideDailog();
+      this.$axios.post('/updateStu', parms).then(res => {
+        if (res.data.code == 1) {
+          this.$message({
+            type: 'success',
+            message: '修改成功！'
+          })
+          this.hideDailog()
 
-            setTimeout(() => {
-              this.$router.push('/login')
-            }, 1500)
-          } else {
-            this.$message.error('修改失败！')
-          }
-        })
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 1500)
+        } else {
+          this.$message.error('修改失败！')
+        }
+      })
     }
   },
   components: {
@@ -111,18 +107,18 @@ export default {
     vSidebar
   },
   created() {
-    bus.$on("collapse", msg => {
-      this.collapse = msg;
-    });
+    bus.$on('collapse', msg => {
+      this.collapse = msg
+    })
 
     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
-    bus.$on("tags", msg => {
-      let arr = [];
+    bus.$on('tags', msg => {
+      let arr = []
       for (let i = 0, len = msg.length; i < len; i++) {
-        msg[i].name && arr.push(msg[i].name);
+        msg[i].name && arr.push(msg[i].name)
       }
-      this.tagsList = arr;
-    });
+      this.tagsList = arr
+    })
   }
-};
+}
 </script>

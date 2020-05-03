@@ -11,10 +11,6 @@
         <p class="title">{{posts.title}}</p>
         <div class="sub">
           <p class="time">{{posts.date}}</p>
-          <p class="read">
-            <i class="el-icon-view"></i>
-            {{posts.read}}
-          </p>
         </div>
         <div style="height:1px;border-bottom:1px solid #f2f2f2;margin: 38px auto;"></div>
         <div style="text-align: center;">
@@ -62,8 +58,7 @@ export default {
   font-weight: bold;
 }
 .sub {
-  display: flex;
-  justify-content: space-between;
+  text-align: right;
   margin-top: 50px;
   font-size: 12px;
   color: #a09e9e;

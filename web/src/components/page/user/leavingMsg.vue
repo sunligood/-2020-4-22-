@@ -4,7 +4,7 @@
     <div class="main">
       <div class="tableBox">
         <el-table
-          :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+          :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
           style="width: 100%"
         >
           <el-table-column
@@ -12,7 +12,7 @@
             label="序号"
             width="50"
             type="index"
-            :index="indexMethod(1)"
+            :index="indexMethod(0)"
           ></el-table-column>
           <el-table-column align="center" prop="author" label="姓名" width="80"></el-table-column>
           <el-table-column align="center" prop="sex" label="性别"></el-table-column>
@@ -23,15 +23,15 @@
         </el-table>
       </div>
       <div class="page">
-        <!-- <el-pagination
+        <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[10, 20]"
           :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next"
           :total="tableData.length"
-        ></el-pagination>-->
+        ></el-pagination>
       </div>
     </div>
     <div class="btnBox">
@@ -51,23 +51,24 @@ export default {
     return {
       search: '',
       tableData: [],
-      currentPage1: 5,
+      currentPage: 1,
       pageSize: 10
     }
   },
   methods: {
     indexMethod(index) {
-      return index++
+      index = index + 1 + (this.currentPage - 1) * this.pageSize
+      return index
     },
     handleEdit(index, row) {
       console.log(index, row)
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage = val
     },
     getTime() {
       //获取时间

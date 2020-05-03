@@ -10,6 +10,8 @@ export default {}
 @import './assets/css/main.css';
 @import './assets/css/theme-green/color-green.css'; /*浅绿色主题*/
 #app {
+  padding: 0;
+  margin: 0;
   overflow: auto;
 }
 .el-button.is-disabled,

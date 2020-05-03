@@ -19,7 +19,7 @@
         </div>
         <div class="words">
           <span>发布时间：</span>
-          <span>{{item.createdDate}}</span>
+          <span>{{item.createdDate.substr(0,10)}}</span>
         </div>
         <div class="words">
           <span>发布人：</span>
@@ -54,7 +54,7 @@
 
 <script>
 import vDetail from './ccommon/classDetail'
-import VueCropper from 'vue-cropperjs';
+import VueCropper from 'vue-cropperjs'
 export default {
   components: {
     vDetail,
@@ -75,50 +75,58 @@ export default {
     showImgBox() {
       this.imgBoxShow = true
     },
-    uploadImg() {
-
-    },
+    uploadImg() {},
     openPicture(url) {
       this.showImgUrl = url
       this.dialogFormVisible = true
     },
     finishUpload() {
       this.imgBoxShow = false
-      this.$axios.post('/queryClassAlbum', {})
-        .then(res => {
-          this.imgArr = res.data.data
-        })
+      this.$axios.post('/queryClassAlbum', {}).then(res => {
+        this.imgArr = res.data.data
+      })
     },
-    getTime() {     	//获取时间
-      let date = new Date();
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      let day = date.getDate();
-      let hour = date.getHours();
-      let minute = date.getMinutes();
-      let second = date.getSeconds();
+    getTime() {
+      //获取时间
+      let date = new Date()
+      let year = date.getFullYear()
+      let month = date.getMonth()
+      let day = date.getDate()
+      let hour = date.getHours()
+      let minute = date.getMinutes()
+      let second = date.getSeconds()
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
       if (day < 10) {
-        day = '0' + day;
+        day = '0' + day
       }
       if (hour < 10) {
-        hour = '0' + hour;
+        hour = '0' + hour
       }
       if (minute < 10) {
-        minute = '0' + minute;
+        minute = '0' + minute
       }
       if (second < 10) {
-        second = '0' + second;
+        second = '0' + second
       }
-      let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+      let time =
+        year +
+        '-' +
+        month +
+        '-' +
+        day +
+        ' ' +
+        hour +
+        ':' +
+        minute +
+        ':' +
+        second
       return time
     }
-
   },
   created() {
-    this.cropImg = this.defaultSrc;
+    this.cropImg = this.defaultSrc
     this.uploadImgData = {
       author: sessionStorage.getItem('name'),
       major: sessionStorage.getItem('major'),
@@ -127,23 +135,19 @@ export default {
       createdDate: this.getTime()
     }
 
+    this.$axios.post('/queryClassAlbum', {}).then(res => {
+      this.imgArr = res.data.data
 
-    this.$axios.post('/queryClassAlbum', {})
-      .then(res => {
-        this.imgArr = res.data.data
-
-        for (let i = 0; i < this.imgArr.length; i++) {
-          for (let key in this.imgArr[i]) {
-            if (key == 'url') {
-              this.urlArr.push(this.imgArr[i][key])
-            }
+      for (let i = 0; i < this.imgArr.length; i++) {
+        for (let key in this.imgArr[i]) {
+          if (key == 'url') {
+            this.urlArr.push(this.imgArr[i][key])
           }
         }
-      })
+      }
+    })
   }
-
 }
-
 </script>``
 <style scoped>
 .main {
@@ -163,7 +167,9 @@ export default {
   width: 100%;
 }
 .cardItem .words {
-  padding: 10px;
+  padding: 2px;
+  font-size: 14px;
+  color: #9e9d9d;
   text-align: center;
 }
 .btnBox {

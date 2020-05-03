@@ -3,7 +3,7 @@
     <div class="title">个人简介</div>
     <div class="imgMainBox">
       <div class="img">
-        <img :src="imageUrl" alt />
+        <img v-if="imageUrl != 'null'" :src="imageUrl" alt />
         <!-- <el-button type="primary" v-show="isEdit">上传头像</el-button> -->
       </div>
       <!-- <el-upload
@@ -39,7 +39,13 @@
     <!-- </el-upload> -->
 
     <div class="formBox">
-      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
         <el-form-item label="学号" prop="studentNo">
           <el-input v-model="ruleForm.emp_no" :disabled="disabledTrue" placeholder="请输入学号"></el-input>
         </el-form-item>
@@ -109,8 +115,25 @@
 
 <script>
 import { sysList } from '../../../mock/data/sysList' // 系别库
+import bus from '../../../components/common/bus'
 export default {
   data() {
+    function checkPhone(rule, value, callback) {
+      if (!/^1[3456789]\d{9}$/.test(value)) {
+        callback(new Error('电话格式错误!'))
+      } else {
+        callback()
+      }
+    }
+    function checkEmail(rule, value, callback) {
+      if (
+        !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value)
+      ) {
+        callback(new Error('邮箱格式错误!'))
+      } else {
+        callback()
+      }
+    }
     return {
       ruleForm: {},
       defaultForm: {},
@@ -119,8 +142,19 @@ export default {
       isEdit: false,
       systemsList: [],
       childList: [],
-      imageUrl: '',
-      uploadData: {}
+      imageUrl: null,
+      uploadData: {},
+      rules: {
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入email', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -155,7 +189,6 @@ export default {
               for (let key in this.defaultForm) {
                 for (let key2 in this.ruleForm) {
                   if (key == key2) {
-                    console.log(this.defaultForm[key], this.ruleForm[key2])
                     if (this.defaultForm[key] != this.ruleForm[key2]) {
                       console.log(key, this.ruleForm[key2], 1111)
                       sessionStorage.setItem(key, this.ruleForm[key2])
@@ -201,6 +234,7 @@ export default {
           message: res.msg
         })
         this.imageUrl = URL.createObjectURL(file.raw)
+        bus.$emit('changeImg', this.imageUrl)
         if (this.imageUrl != sessionStorage.getItem('image')) {
           sessionStorage.setItem('image', this.imageUrl)
         }
@@ -236,8 +270,14 @@ export default {
       email: sessionStorage.getItem('email'),
       address: sessionStorage.getItem('address'),
       image: sessionStorage.getItem('image'),
-      hobby: sessionStorage.getItem('hobby'),
-      explains: sessionStorage.getItem('explains')
+      hobby:
+        sessionStorage.getItem('hobby') != 'null'
+          ? sessionStorage.getItem('hobby')
+          : '无',
+      explains:
+        sessionStorage.getItem('hobby') != 'null'
+          ? sessionStorage.getItem('explains')
+          : '无'
     }
     this.defaultForm = {
       emp_no: sessionStorage.getItem('emp_no'),

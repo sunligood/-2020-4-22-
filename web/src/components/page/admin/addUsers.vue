@@ -67,6 +67,22 @@
 import { sysList } from '../../../mock/data/sysList'
 export default {
   data() {
+    function checkPhone(rule, value, callback) {
+      if (!/^1[3456789]\d{9}$/.test(value)) {
+        callback(new Error('电话格式错误!'))
+      } else {
+        callback()
+      }
+    }
+    function checkEmail(rule, value, callback) {
+      if (
+        !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value)
+      ) {
+        callback(new Error('邮箱格式错误!'))
+      } else {
+        callback()
+      }
+    }
     return {
       systemsList: [],
       childList: [],
@@ -90,8 +106,14 @@ export default {
         systems: [{ required: true, message: '请选择系别', trigger: 'change' }],
         major: [{ required: true, message: '请选择专业', trigger: 'change' }],
         class: [{ required: true, message: '请选择班级', trigger: 'change' }],
-        mobile: [{ required: true, message: '请输入电话', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入email', trigger: 'blur' }],
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入email', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
         address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
       }
     }
@@ -99,6 +121,7 @@ export default {
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
+        console.log(this.ruleForm)
         if (valid) {
           this.$axios.post('/addStu', this.ruleForm).then(res => {
             if (res.data.code == 1) {

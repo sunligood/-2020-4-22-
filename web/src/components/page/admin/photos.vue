@@ -30,12 +30,12 @@
     </div>
     <div class="tableBox">
       <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
         style="width: 100%"
         ref="multipleTable"
       >
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="序号" width="50" type="index" :index="indexMethod(1)"></el-table-column>
+        <el-table-column align="center" label="序号" width="50" type="index" :index="indexMethod(0)"></el-table-column>
         <el-table-column align="center" prop="name" label="图片">
           <template slot-scope="scope">
             <img :src="scope.row.url" width="50" height="50" alt />
@@ -62,15 +62,15 @@
         <el-button type="primary" @click="deleteMore()">批量删除</el-button>
       </div>
       <div class="pageBox">
-        <!-- <el-pagination
+        <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
+          :page-sizes="[10, 20]"
           :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="total, sizes, prev, pager, next"
           :total="tableData.length"
-        ></el-pagination>-->
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@ export default {
       input: '',
       search: '',
       tableData: [],
-      currentPage: 5,
+      currentPage: 1,
       pageSize: 10,
       systemsList: [],
       childList: [],
@@ -97,7 +97,8 @@ export default {
   },
   methods: {
     indexMethod(index) {
-      return index++
+      index = index + 1 + (this.currentPage - 1) * this.pageSize
+      return index
     },
     handleEdit(index, row) {
       console.log(index, row)
@@ -161,10 +162,10 @@ export default {
     },
     // page fn
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
+      this.pageSize = val
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+      this.currentPage = val
     },
     flushTable() {
       this.$axios.post('/queryClassAlbum', {}).then(res => {
@@ -187,6 +188,7 @@ export default {
       }
     },
     searchFn(type) {
+      this.currentPage = 1
       if (type == 'return') {
         // 重置
         this.form = {
@@ -210,12 +212,11 @@ export default {
     }
   },
   created() {
-    this.$axios.post('/queryClassAlbum', {})
-      .then(res => {
-        if (res.data.code == 1) {
-          this.tableData = res.data.data
-        }
-      })
+    this.$axios.post('/queryClassAlbum', {}).then(res => {
+      if (res.data.code == 1) {
+        this.tableData = res.data.data
+      }
+    })
   },
   mounted() {
     this.systemsList = sysList

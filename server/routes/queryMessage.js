@@ -5,7 +5,7 @@ const { mysql, sqlFormat } = require('../mysql/index')
 router.post('/', (req, res) => {
   let data = req.body
   let sql = `select * from message_db`
-  // 班级留言查询
+  // 班级查询
   if (data.systems || data.major || data.class) {
     let unit = ''
     for (let key in data) {
