@@ -75,17 +75,17 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="学号">
+        <el-form-item label="学号" prop="emp_no">
           <el-input v-model="form.emp_no" placeholder="请输入学号"></el-input>
         </el-form-item>
-        <el-form-item label="姓名">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
+        <el-form-item label="性别" prop="sex">
           <el-radio v-model="form.sex" label="男">男</el-radio>
           <el-radio v-model="form.sex" label="女">女</el-radio>
         </el-form-item>
-        <el-form-item label="系别">
+        <el-form-item label="系别" prop="systems">
           <el-select v-model="form.systems" placeholder="请选择系别" @change="getChild(form.systems)">
             <el-option
               v-for="obj in  systemsList"
@@ -95,7 +95,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="专业">
+        <el-form-item label="专业" prop="major">
           <el-select v-model="form.major" placeholder="请选择专业">
             <el-option
               v-for="item in childList"
@@ -105,16 +105,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="班级">
+        <el-form-item label="班级" prop="class">
           <el-input v-model="form.class" placeholder="请输入班级"></el-input>
         </el-form-item>
-        <el-form-item label="电话">
+        <el-form-item label="电话" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入电话"></el-input>
         </el-form-item>
-        <el-form-item label="email">
+        <el-form-item label="email" prop="email">
           <el-input v-model="form.email" placeholder="请输入email"></el-input>
         </el-form-item>
-        <el-form-item label="现住地址">
+        <el-form-item label="现住地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入现住地址"></el-input>
         </el-form-item>
         <el-form-item style="text-align:right">
@@ -130,6 +130,22 @@
 import { sysList } from '../../../mock/data/sysList'
 export default {
   data() {
+    function checkPhone(rule, value, callback) {
+      if (!/^1[3456789]\d{9}$/.test(value)) {
+        callback(new Error('电话格式错误!'))
+      } else {
+        callback()
+      }
+    }
+    function checkEmail(rule, value, callback) {
+      if (
+        !/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value)
+      ) {
+        callback(new Error('邮箱格式错误!'))
+      } else {
+        callback()
+      }
+    }
     return {
       search: '',
       tableData: [],
@@ -151,8 +167,14 @@ export default {
         systems: [{ required: true, message: '请选择系别', trigger: 'change' }],
         major: [{ required: true, message: '请选择专业', trigger: 'change' }],
         class: [{ required: true, message: '请选择班级', trigger: 'change' }],
-        mobile: [{ required: true, message: '请输入电话', trigger: 'blur' }],
-        email: [{ required: true, message: '请输入email', trigger: 'blur' }],
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入email', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
         address: [{ required: true, message: '请输入地址', trigger: 'blur' }]
       }
     }
@@ -180,7 +202,6 @@ export default {
     // 编辑保存
     changeUserInfo(formName) {
       this.$refs[formName].validate(valid => {
-        console.log(this.form)
         if (valid) {
           this.$axios.post('/updateStu', this.form).then(res => {
             if (res.data.code == 1) {
