@@ -82,9 +82,15 @@ export default {
     },
     finishUpload() {
       this.imgBoxShow = false
-      this.$axios.post('/queryClassAlbum', {}).then(res => {
-        this.imgArr = res.data.data
-      })
+      this.$axios
+        .post('/queryClassAlbum', {
+          systems: this.uploadImgData.systems,
+          major: this.uploadImgData.major,
+          class: this.uploadImgData.class
+        })
+        .then(res => {
+          this.imgArr = res.data.data
+        })
     },
     getTime() {
       //获取时间
@@ -135,17 +141,23 @@ export default {
       createdDate: this.getTime()
     }
 
-    this.$axios.post('/queryClassAlbum', {}).then(res => {
-      this.imgArr = res.data.data
+    this.$axios
+      .post('/queryClassAlbum', {
+        systems: this.uploadImgData.systems,
+        major: this.uploadImgData.major,
+        class: this.uploadImgData.class
+      })
+      .then(res => {
+        this.imgArr = res.data.data
 
-      for (let i = 0; i < this.imgArr.length; i++) {
-        for (let key in this.imgArr[i]) {
-          if (key == 'url') {
-            this.urlArr.push(this.imgArr[i][key])
+        for (let i = 0; i < this.imgArr.length; i++) {
+          for (let key in this.imgArr[i]) {
+            if (key == 'url') {
+              this.urlArr.push(this.imgArr[i][key])
+            }
           }
         }
-      }
-    })
+      })
   }
 }
 </script>``
